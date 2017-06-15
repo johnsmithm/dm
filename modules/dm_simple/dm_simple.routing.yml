@@ -1,0 +1,16 @@
+# hooks_example only has one route. It is to a page explaining the module.
+dm_simple:
+  path: 'dm_simple'
+  defaults:
+    _controller: '\Drupal\dm_simple\Controller\DMSController::simple'
+    _title: 'Clasificarea celulelor unui tabel'
+  requirements:
+    _permission: 'access content'
+
+dm_simple_ajax:
+  path: 'dm_simple/ajax'
+  defaults:
+    _controller: '\Drupal\dm_simple\Controller\DMSController::ajax'
+    _title: 'Page Ajax'
+  requirements:
+    _permission: 'access content'

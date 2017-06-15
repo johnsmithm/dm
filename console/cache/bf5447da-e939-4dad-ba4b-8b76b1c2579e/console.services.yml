@@ -1,0 +1,1333 @@
+services:
+  router_debug:
+    class: Drupal\Console\Command\Router\DebugCommand
+    arguments:
+      - '@router.route_provider'
+    tags:
+      - { name: drupal.command }
+  console.router_rebuild:
+    class: Drupal\Console\Command\Router\RebuildCommand
+    arguments:
+      - '@router.builder'
+    tags:
+      - { name: drupal.command }
+  console.create_nodes:
+    class: Drupal\Console\Command\Create\NodesCommand
+    arguments:
+      - '@console.drupal_api'
+      - '@console.create_node_data'
+    tags:
+      - { name: drupal.command }
+  console.create_comments:
+    class: Drupal\Console\Command\Create\CommentsCommand
+    arguments:
+      - '@console.create_comment_data'
+    tags:
+      - { name: drupal.command }
+  console.create_terms:
+    class: Drupal\Console\Command\Create\TermsCommand
+    arguments:
+      - '@console.drupal_api'
+      - '@console.create_term_data'
+    tags:
+      - { name: drupal.command }
+  console.create_users:
+    class: Drupal\Console\Command\Create\UsersCommand
+    arguments:
+      - '@console.drupal_api'
+      - '@console.create_user_data'
+    tags:
+      - { name: drupal.command }
+  console.create_vocabularies:
+    class: Drupal\Console\Command\Create\VocabulariesCommand
+    arguments:
+      - '@console.create_vocabulary_data'
+    tags:
+      - { name: drupal.command }
+  console.cron_debug:
+    class: Drupal\Console\Command\Cron\DebugCommand
+    arguments:
+      - '@module_handler'
+    tags:
+      - { name: drupal.command }
+  console.cron_execute:
+    class: Drupal\Console\Command\Cron\ExecuteCommand
+    arguments:
+      - '@module_handler'
+      - '@lock'
+      - '@state'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.cron_release:
+    class: Drupal\Console\Command\Cron\ReleaseCommand
+    arguments:
+      - '@lock'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.views_disable:
+    class: Drupal\Console\Command\Views\DisableCommand
+    arguments:
+      - '@entity_type.manager'
+      - '@entity.query'
+    tags:
+      - { name: drupal.command }
+  console.views_enable:
+    class: Drupal\Console\Command\Views\EnableCommand
+    arguments:
+      - '@entity_type.manager'
+      - '@entity.query'
+    tags:
+      - { name: drupal.command }
+  console.views_debug:
+    class: Drupal\Console\Command\Views\DebugCommand
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: drupal.command }
+  console.views_plugins_debug:
+    class: Drupal\Console\Command\Views\PluginsDebugCommand
+    tags:
+      - { name: drupal.command }
+  console.field_info:
+    class: Drupal\Console\Command\Field\InfoCommand
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+    tags:
+      - { name: drupal.command }
+  console.container_debug:
+    class: Drupal\Console\Command\ContainerDebugCommand
+    tags:
+      - { name: drupal.command }
+  console.plugin_debug:
+    class: Drupal\Console\Command\PluginDebugCommand
+    tags:
+      - { name: drupal.command }
+  console.permission_debug:
+    class: Drupal\Console\Command\PermissionDebugCommand
+    tags:
+      - { name: drupal.command }
+  console.event_debug:
+    class: Drupal\Console\Command\EventDebugCommand
+    arguments:
+      - '@event_dispatcher'
+    tags:
+      - { name: drupal.command }
+  console.devel_dumper:
+    class: Drupal\Console\Command\DevelDumperCommand
+    arguments:
+      - '@?plugin.manager.devel_dumper'
+    tags:
+      - { name: drupal.command }
+  console.shell:
+    class: Drupal\Console\Command\ShellCommand
+    tags:
+      - { name: drupal.command }
+  console.database_add:
+    class: Drupal\Console\Command\Database\AddCommand
+    arguments:
+      - '@console.database_settings_generator'
+    tags:
+      - { name: drupal.command }
+  console.database_client:
+    class: Drupal\Console\Command\Database\ClientCommand
+    tags:
+      - { name: drupal.command }
+  console.database_query:
+    class: Drupal\Console\Command\Database\QueryCommand
+    tags:
+      - { name: drupal.command }
+  console.database_connect:
+    class: Drupal\Console\Command\Database\ConnectCommand
+    tags:
+      - { name: drupal.command }
+  console.database_drop:
+    class: Drupal\Console\Command\Database\DropCommand
+    arguments:
+      - '@database'
+    tags:
+      - { name: drupal.command }
+  console.database_dump:
+    class: Drupal\Console\Command\Database\DumpCommand
+    arguments:
+      - '@app.root'
+      - '@console.shell_process'
+    tags:
+      - { name: drupal.command }
+  console.database_log_clear:
+    class: Drupal\Console\Command\Database\LogClearCommand
+    arguments:
+      - '@database'
+    tags:
+      - { name: drupal.command }
+  console.database_log_debug:
+    class: Drupal\Console\Command\Database\LogDebugCommand
+    arguments:
+      - '@database'
+      - '@date.formatter'
+      - '@entity_type.manager'
+      - '@string_translation'
+    tags:
+      - { name: drupal.command }
+  console.database_log_poll:
+    class: Drupal\Console\Command\Database\LogPollCommand
+    arguments:
+      - '@database'
+      - '@date.formatter'
+      - '@entity_type.manager'
+      - '@string_translation'
+    tags:
+      - { name: drupal.command }
+  console.database_restore:
+    class: Drupal\Console\Command\Database\RestoreCommand
+    arguments:
+      - '@app.root'
+    tags:
+      - { name: drupal.command }
+  console.database_table_debug:
+    class: Drupal\Console\Command\Database\TableDebugCommand
+    arguments:
+      - '@console.redbean'
+      - '@database'
+    tags:
+      - { name: drupal.command }
+  console.cache_context_debug:
+    class: Drupal\Console\Command\Cache\ContextDebugCommand
+    tags:
+      - { name: drupal.command }
+  console.cache_rebuild:
+    class: Drupal\Console\Command\Cache\RebuildCommand
+    arguments:
+      - '@console.drupal_api'
+      - '@console.site'
+      - '@class_loader'
+      - '@request_stack'
+    tags:
+      - { name: drupal.command }
+  translation_status:
+    class: Drupal\Console\Command\Locale\TranslationStatusCommand
+    arguments:
+      - '@console.site'
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.command }
+  language_delete:
+    class: Drupal\Console\Command\Locale\LanguageDeleteCommand
+    arguments:
+      - '@console.site'
+      - '@entity_type.manager'
+      - '@module_handler'
+    tags:
+      - { name: drupal.command }
+  language_add:
+    class: Drupal\Console\Command\Locale\LanguageAddCommand
+    arguments:
+      - '@console.site'
+      - '@module_handler'
+    tags:
+      - { name: drupal.command }
+  console.generate_doc_cheatsheet:
+    class: Drupal\Console\Command\Develop\GenerateDocCheatsheetCommand
+    tags:
+      - { name: drupal.command }
+  console.generate_doc_dash:
+    class: Drupal\Console\Command\Develop\GenerateDocDashCommand
+    arguments:
+      - '@console.renderer'
+      - '@console.root'
+    tags:
+      - { name: drupal.command }
+  console.generate_doc_data:
+    class: Drupal\Console\Command\Develop\GenerateDocDataCommand
+    tags:
+      - { name: drupal.command }
+  console.generate_doc_gitbook:
+    class: Drupal\Console\Command\Develop\GenerateDocGitbookCommand
+    arguments:
+      - '@console.renderer'
+    tags:
+      - { name: drupal.command }
+  console.translation_cleanup:
+    class: Drupal\Console\Command\Develop\TranslationCleanupCommand
+    arguments:
+      - '@console.root'
+      - '@console.configuration_manager'
+    tags:
+      - { name: drupal.command }
+  console.translation_pending:
+    class: Drupal\Console\Command\Develop\TranslationPendingCommand
+    arguments:
+      - '@console.root'
+      - '@console.configuration_manager'
+      - '@console.nested_array'
+    tags:
+      - { name: drupal.command }
+  console.translation_stats:
+    class: Drupal\Console\Command\Develop\TranslationStatsCommand
+    arguments:
+      - '@console.root'
+      - '@console.configuration_manager'
+      - '@console.renderer'
+      - '@console.nested_array'
+    tags:
+      - { name: drupal.command }
+  console.translation_sync:
+    class: Drupal\Console\Command\Develop\TranslationSyncCommand
+    arguments:
+      - '@console.root'
+      - '@console.configuration_manager'
+    tags:
+      - { name: drupal.command }
+  console.update_debug:
+    class: Drupal\Console\Command\Update\DebugCommand
+    arguments:
+      - '@console.site'
+      - '@update.post_update_registry'
+    tags:
+      - { name: drupal.command }
+  console.update_entities:
+    class: Drupal\Console\Command\Update\EntitiesCommand
+    arguments:
+      - '@state'
+      - '@entity.definition_update_manager'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.update_execute:
+    class: Drupal\Console\Command\Update\ExecuteCommand
+    arguments:
+      - '@console.site'
+      - '@state'
+      - '@module_handler'
+      - '@update.post_update_registry'
+      - '@console.extension_manager'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.entity_debug:
+    class: Drupal\Console\Command\Entity\DebugCommand
+    arguments:
+      - '@entity_type.repository'
+      - '@entity_type.manager'
+    tags:
+      - { name: drupal.command }
+  console.entity_delete:
+    class: Drupal\Console\Command\Entity\DeleteCommand
+    arguments:
+      - '@entity_type.repository'
+      - '@entity_type.manager'
+    tags:
+      - { name: drupal.command }
+  console.user_debug:
+    class: Drupal\Console\Command\User\DebugCommand
+    arguments:
+      - '@entity_type.manager'
+      - '@entity.query'
+      - '@console.drupal_api'
+    tags:
+      - { name: drupal.command }
+  console.user_delete:
+    class: Drupal\Console\Command\User\DeleteCommand
+    arguments:
+      - '@entity_type.manager'
+      - '@entity.query'
+      - '@console.drupal_api'
+    tags:
+      - { name: drupal.command }
+  console.user_login_clear_attempts:
+    class: Drupal\Console\Command\User\LoginCleanAttemptsCommand
+    arguments:
+      - '@database'
+    tags:
+      - { name: drupal.command }
+  console.user_login_url:
+    class: Drupal\Console\Command\User\LoginUrlCommand
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: drupal.command }
+  console.user_password_hash:
+    class: Drupal\Console\Command\User\PasswordHashCommand
+    arguments:
+      - '@password'
+    tags:
+      - { name: drupal.command }
+  console.user_password_reset:
+    class: Drupal\Console\Command\User\PasswordResetCommand
+    arguments:
+      - '@database'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.user_role:
+    class: Drupal\Console\Command\User\RoleCommand
+    arguments:
+      - '@console.drupal_api'
+    tags:
+      - { name: drupal.command }
+  console.user_create:
+    class: Drupal\Console\Command\User\CreateCommand
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+      - '@date.formatter'
+      - '@console.drupal_api'
+    tags:
+      - { name: drupal.command }
+  console.taxonomy_delete:
+    class: Drupal\Console\Command\Taxonomy\DeleteTermCommand
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: drupal.command }
+  console.node_access_rebuild:
+    class: Drupal\Console\Command\Node\AccessRebuildCommand
+    arguments:
+      - '@state'
+    tags:
+      - { name: drupal.command }
+  console.config_debug:
+    class: Drupal\Console\Command\Config\DebugCommand
+    arguments:
+      - '@config.factory'
+      - '@config.storage'
+    tags:
+      - { name: drupal.command }
+  console.config_delete:
+    class: Drupal\Console\Command\Config\DeleteCommand
+    arguments:
+      - '@config.factory'
+      - '@config.storage'
+      - '@config.storage.sync'
+    tags:
+      - { name: drupal.command }
+  console.config_diff:
+    class: Drupal\Console\Command\Config\DiffCommand
+    arguments:
+      - '@config.storage'
+      - '@config.manager'
+    tags:
+      - { name: drupal.command }
+  console.config_edit:
+    class: Drupal\Console\Command\Config\EditCommand
+    arguments:
+      - '@config.factory'
+      - '@config.storage'
+      - '@console.configuration_manager'
+    tags:
+      - { name: drupal.command }
+  console.config_export:
+    class: Drupal\Console\Command\Config\ExportCommand
+    arguments:
+      - '@config.manager'
+    tags:
+      - { name: drupal.command }
+  console.config_export_content_type:
+    class: Drupal\Console\Command\Config\ExportContentTypeCommand
+    arguments:
+      - '@entity_type.manager'
+      - '@config.storage'
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.command }
+  console.config_export_single:
+    class: Drupal\Console\Command\Config\ExportSingleCommand
+    arguments:
+      - '@entity_type.manager'
+      - '@config.storage'
+    tags:
+      - { name: drupal.command }
+  console.config_export_view:
+    class: Drupal\Console\Command\Config\ExportViewCommand
+    arguments:
+      - '@entity_type.manager'
+      - '@config.storage'
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.command }
+  console.config_import:
+    class: Drupal\Console\Command\Config\ImportCommand
+    arguments:
+      - '@config.storage'
+      - '@config.manager'
+    tags:
+      - { name: drupal.command }
+  console.config_import_single:
+    class: Drupal\Console\Command\Config\ImportSingleCommand
+    arguments:
+      - '@config.storage'
+      - '@config.manager'
+    tags:
+      - { name: drupal.command }
+  console.config_override:
+    class: Drupal\Console\Command\Config\OverrideCommand
+    arguments:
+      - '@config.storage'
+      - '@config.factory'
+    tags:
+      - { name: drupal.command }
+  console.config_settings_debug:
+    class: Drupal\Console\Command\Config\SettingsDebugCommand
+    arguments:
+      - '@settings'
+    tags:
+      - { name: drupal.command }
+  console.config_validate:
+    class: Drupal\Console\Command\Config\ValidateCommand
+    tags:
+      - { name: drupal.command }
+  console.config_validate_debug:
+    class: Drupal\Console\Command\Config\ValidateDebugCommand
+    tags:
+      - { name: drupal.command }
+  console.queue_debug:
+    class: Drupal\Console\Command\Queue\DebugCommand
+    arguments:
+      - '@plugin.manager.queue_worker'
+    tags:
+      - { name: drupal.command }
+  console.queue_run:
+    class: Drupal\Console\Command\Queue\RunCommand
+    arguments:
+      - '@plugin.manager.queue_worker'
+      - '@queue'
+    tags:
+      - { name: drupal.command }
+  theme_debug:
+    class: Drupal\Console\Command\Theme\DebugCommand
+    arguments:
+      - '@config.factory'
+      - '@theme_handler'
+    tags:
+      - { name: drupal.command }
+  theme_download:
+    class: Drupal\Console\Command\Theme\DownloadCommand
+    arguments:
+      - '@console.drupal_api'
+      - '@http_client'
+      - '@app.root'
+    tags:
+      - { name: drupal.command }
+  theme_install:
+    class: Drupal\Console\Command\Theme\InstallCommand
+    arguments:
+      - '@config.factory'
+      - '@theme_handler'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  theme_path:
+    class: Drupal\Console\Command\Theme\PathCommand
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.command }
+  theme_uninstall:
+    class: Drupal\Console\Command\Theme\UninstallCommand
+    arguments:
+      - '@config.factory'
+      - '@theme_handler'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.module_generator:
+    class: Drupal\Console\Generator\ModuleGenerator
+    tags:
+      - { name: drupal.generator }
+  console.modulefile_generator:
+    class: Drupal\Console\Generator\ModuleFileGenerator
+    tags:
+      - { name: drupal.generator }
+  console.authentication_provider_generator:
+    class: Drupal\Console\Generator\AuthenticationProviderGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.help_generator:
+    class: Drupal\Console\Generator\HelpGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.controller_generator:
+    class: Drupal\Console\Generator\ControllerGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.breakpoint_generator:
+    class: Drupal\Console\Generator\BreakPointGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.form_alter_generator:
+    class: Drupal\Console\Generator\FormAlterGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.permission_generator:
+    class: Drupal\Console\Generator\PermissionGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.event_subscriber_generator:
+    class: Drupal\Console\Generator\EventSubscriberGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.form_generator:
+    class: Drupal\Console\Generator\FormGenerator
+    arguments:
+      - '@console.extension_manager'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.generator }
+  console.profile_generator:
+    class: Drupal\Console\Generator\ProfileGenerator
+    tags:
+      - { name: drupal.generator }
+  console.post_update_generator:
+    class: Drupal\Console\Generator\PostUpdateGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_condition_generator:
+    class: Drupal\Console\Generator\PluginConditionGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_field_generator:
+    class: Drupal\Console\Generator\PluginFieldFormatterGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_field_formatter_generator:
+    class: Drupal\Console\Generator\PluginFieldFormatterGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_field_type_generator:
+    class: Drupal\Console\Generator\PluginFieldTypeGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_field_widget_generator:
+    class: Drupal\Console\Generator\PluginFieldWidgetGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_image_effect_generator:
+    class: Drupal\Console\Generator\PluginImageEffectGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_image_formatter_generator:
+    class: Drupal\Console\Generator\PluginImageFormatterGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_mail_generator:
+    class: Drupal\Console\Generator\PluginMailGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_migrate_source_generator:
+    class: Drupal\Console\Generator\PluginMigrateSourceGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_migrate_process_generator:
+    class: Drupal\Console\Generator\PluginMigrateProcessGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_rest_resource_generator:
+    class: Drupal\Console\Generator\PluginRestResourceGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_rules_action_generator:
+    class: Drupal\Console\Generator\PluginRulesActionGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_skeleton_generator:
+    class: Drupal\Console\Generator\PluginSkeletonGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_views_field_generator:
+    class: Drupal\Console\Generator\PluginViewsFieldGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_type_annotation_generator:
+    class: Drupal\Console\Generator\PluginTypeAnnotationGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.plugin_type_yaml_generator:
+    class: Drupal\Console\Generator\PluginTypeYamlGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.route_subscriber_generator:
+    class: Drupal\Console\Generator\RouteSubscriberGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.service_generator:
+    class: Drupal\Console\Generator\ServiceGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.theme_generator:
+    class: Drupal\Console\Generator\ThemeGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.twig_extension_generator:
+    class: Drupal\Console\Generator\TwigExtensionGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.update_generator:
+    class: Drupal\Console\Generator\UpdateGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.pluginblock_generator:
+    class: Drupal\Console\Generator\PluginBlockGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.command_generator:
+    class: Drupal\Console\Generator\CommandGenerator
+    arguments:
+      - '@console.extension_manager'
+      - '@console.translator_manager'
+    tags:
+      - { name: drupal.generator }
+  console.command_ckeditorbutton:
+    class: Drupal\Console\Generator\PluginCKEditorButtonGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.database_settings_generator:
+    class: Drupal\Console\Generator\DatabaseSettingsGenerator
+    arguments:
+      - '@kernel'
+    tags:
+      - { name: drupal.generator }
+  console.entitycontent_generator:
+    class: Drupal\Console\Generator\EntityContentGenerator
+    arguments:
+      - '@console.extension_manager'
+      - '@console.site'
+      - '@console.renderer'
+    tags:
+      - { name: drupal.generator }
+  console.entitybundle_generator:
+    class: Drupal\Console\Generator\EntityBundleGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.entityconfig_generator:
+    class: Drupal\Console\Generator\EntityConfigGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.cache_context_generator:
+    class: Drupal\Console\Generator\CacheContextGenerator
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.generator }
+  console.state_debug:
+    class: Drupal\Console\Command\State\DebugCommand
+    arguments:
+      - '@state'
+      - '@keyvalue'
+    tags:
+      - { name: drupal.command }
+  console.state_delete:
+    class: Drupal\Console\Command\State\DeleteCommand
+    arguments:
+      - '@state'
+      - '@keyvalue'
+    tags:
+      - { name: drupal.command }
+  console.state_override:
+    class: Drupal\Console\Command\State\OverrideCommand
+    arguments:
+      - '@state'
+      - '@keyvalue'
+    tags:
+      - { name: drupal.command }
+  module_debug:
+    class: Drupal\Console\Command\Module\DebugCommand
+    arguments:
+      - '@console.configuration_manager'
+      - '@console.site'
+      - '@http_client'
+    tags:
+      - { name: drupal.command }
+  module_dependency_install:
+    class: Drupal\Console\Command\Module\InstallDependencyCommand
+    arguments:
+      - '@console.site'
+      - '@console.validator'
+      - '@module_installer'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  module_download:
+    class: Drupal\Console\Command\Module\DownloadCommand
+    arguments:
+      - '@console.drupal_api'
+      - '@http_client'
+      - '@app.root'
+      - '@console.extension_manager'
+      - '@console.validator'
+      - '@console.site'
+      - '@console.configuration_manager'
+      - '@console.shell_process'
+      - '@console.root'
+    tags:
+      - { name: drupal.command }
+  module_install:
+    class: Drupal\Console\Command\Module\InstallCommand
+    arguments:
+      - '@console.site'
+      - '@console.validator'
+      - '@module_installer'
+      - '@console.drupal_api'
+      - '@console.extension_manager'
+      - '@app.root'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  module_path:
+    class: Drupal\Console\Command\Module\PathCommand
+    arguments:
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.command }
+  module_uninstall:
+    class: Drupal\Console\Command\Module\UninstallCommand
+    arguments:
+      - '@console.site'
+      - '@module_installer'
+      - '@console.chain_queue'
+      - '@config.factory'
+    tags:
+      - { name: drupal.command }
+  module_update:
+    class: Drupal\Console\Command\Module\UpdateCommand
+    arguments:
+      - '@console.shell_process'
+      - '@console.root'
+    tags:
+      - { name: drupal.command }
+  console.site_import_local:
+    class: Drupal\Console\Command\Site\ImportLocalCommand
+    arguments:
+      - '@app.root'
+      - '@console.configuration_manager'
+    tags:
+      - { name: drupal.command }
+  console.site_maintenance:
+    class: Drupal\Console\Command\Site\MaintenanceCommand
+    arguments:
+      - '@state'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.site_statistics:
+    class: Drupal\Console\Command\Site\StatisticsCommand
+    arguments:
+      - '@console.drupal_api'
+      - '@entity.query'
+      - '@console.extension_manager'
+      - '@module_handler'
+    tags:
+      - { name: drupal.command }
+  console.site_status:
+    class: Drupal\Console\Command\Site\StatusCommand
+    arguments:
+      - '@system.manager'
+      - '@settings'
+      - '@config.factory'
+      - '@theme_handler'
+      - '@app.root'
+    tags:
+      - { name: drupal.command }
+  console.libraries_debug:
+    class: Drupal\Console\Command\Libraries\DebugCommand
+    arguments:
+      - '@module_handler'
+      - '@theme_handler'
+      - '@library.discovery'
+      - '@app.root'
+    tags:
+      - { name: drupal.command }
+  feature_debug:
+    class: Drupal\Console\Command\Features\DebugCommand
+    tags:
+      - { name: drupal.command }
+  feature_import:
+    class: Drupal\Console\Command\Features\ImportCommand
+    tags:
+      - { name: drupal.command }
+  console.generate_module:
+    class: Drupal\Console\Command\Generate\ModuleCommand
+    arguments:
+      - '@console.module_generator'
+      - '@console.validator'
+      - '@app.root'
+      - '@console.string_converter'
+      - '@console.drupal_api'
+      - '@http_client'
+      - '@console.site'
+    tags:
+      - { name: drupal.command }
+  console.generate_modulefile:
+    class: Drupal\Console\Command\Generate\ModuleFileCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.modulefile_generator'
+    tags:
+      - { name: drupal.command }
+  console.generate_authentication_provider:
+    class: Drupal\Console\Command\Generate\AuthenticationProviderCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.authentication_provider_generator'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_controller:
+    class: Drupal\Console\Command\Generate\ControllerCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.controller_generator'
+      - '@console.string_converter'
+      - '@console.validator'
+      - '@router.route_provider'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_breakpoint:
+    class: Drupal\Console\Command\Generate\BreakPointCommand
+    arguments:
+      - '@console.breakpoint_generator'
+      - '@app.root'
+      - '@theme_handler'
+      - '@console.validator'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_help:
+    class: Drupal\Console\Command\Generate\HelpCommand
+    arguments:
+      - '@console.help_generator'
+      - '@console.site'
+      - '@console.extension_manager'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_form:
+    class: Drupal\Console\Command\Generate\FormBaseCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.form_generator'
+      - '@console.chain_queue'
+      - '@console.string_converter'
+      - '@plugin.manager.element_info'
+      - '@router.route_provider'
+    tags:
+      - { name: drupal.command }
+  console.generate_form_alter:
+    class: Drupal\Console\Command\Generate\FormAlterCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.form_alter_generator'
+      - '@console.string_converter'
+      - '@module_handler'
+      - '@plugin.manager.element_info'
+      - '@?profiler'
+      - '@app.root'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_permissions:
+    class: Drupal\Console\Command\Generate\PermissionCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.string_converter'
+      - '@console.permission_generator'
+    tags:
+      - { name: drupal.command }
+  console.generate_event_subscriber:
+    class: Drupal\Console\Command\Generate\EventSubscriberCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.event_subscriber_generator'
+      - '@console.string_converter'
+      - '@event_dispatcher'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_form_config:
+    class: Drupal\Console\Command\Generate\ConfigFormBaseCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.form_generator'
+      - '@console.string_converter'
+      - '@router.route_provider'
+      - '@plugin.manager.element_info'
+      - '@app.root'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_type_annotation:
+    class: Drupal\Console\Command\Generate\PluginTypeAnnotationCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_type_annotation_generator'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_condition:
+    class: Drupal\Console\Command\Generate\PluginConditionCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_condition_generator'
+      - '@console.chain_queue'
+      - '@entity_type.repository'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_field:
+    class: Drupal\Console\Command\Generate\PluginFieldCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.string_converter'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_field_formatter:
+    class: Drupal\Console\Command\Generate\PluginFieldFormatterCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_field_formatter_generator'
+      - '@console.string_converter'
+      - '@plugin.manager.field.field_type'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_field_type:
+    class: Drupal\Console\Command\Generate\PluginFieldTypeCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_field_type_generator'
+      - '@console.string_converter'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_field_widget:
+    class: Drupal\Console\Command\Generate\PluginFieldWidgetCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_field_widget_generator'
+      - '@console.string_converter'
+      - '@plugin.manager.field.field_type'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_image_effect:
+    class: Drupal\Console\Command\Generate\PluginImageEffectCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_image_effect_generator'
+      - '@console.string_converter'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_image_formatter:
+    class: Drupal\Console\Command\Generate\PluginImageFormatterCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_image_formatter_generator'
+      - '@console.string_converter'
+      - '@console.validator'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_mail:
+    class: Drupal\Console\Command\Generate\PluginMailCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_mail_generator'
+      - '@console.string_converter'
+      - '@console.validator'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_migrate_source:
+    class: Drupal\Console\Command\Generate\PluginMigrateSourceCommand
+    arguments:
+      - '@config.factory'
+      - '@console.chain_queue'
+      - '@console.plugin_migrate_source_generator'
+      - '@entity_type.manager'
+      - '@console.extension_manager'
+      - '@console.validator'
+      - '@console.string_converter'
+      - '@plugin.manager.element_info'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_migrate_process:
+    class: Drupal\Console\Command\Generate\PluginMigrateProcessCommand
+    arguments:
+      - '@console.plugin_migrate_process_generator'
+      - '@console.chain_queue'
+      - '@console.extension_manager'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_rest_resource:
+    class: Drupal\Console\Command\Generate\PluginRestResourceCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_rest_resource_generator'
+      - '@console.string_converter'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_rules_action:
+    class: Drupal\Console\Command\Generate\PluginRulesActionCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_rules_action_generator'
+      - '@console.string_converter'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_skeleton:
+    class: Drupal\Console\Command\Generate\PluginSkeletonCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_skeleton_generator'
+      - '@console.string_converter'
+      - '@console.validator'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_type_yaml:
+    class: Drupal\Console\Command\Generate\PluginTypeYamlCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_type_yaml_generator'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_plugin_views_field:
+    class: Drupal\Console\Command\Generate\PluginViewsFieldCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.plugin_views_field_generator'
+      - '@console.site'
+      - '@console.string_converter'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_post_update:
+    class: Drupal\Console\Command\Generate\PostUpdateCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.post_update_generator'
+      - '@console.site'
+      - '@console.validator'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_profile:
+    class: Drupal\Console\Command\Generate\ProfileCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.profile_generator'
+      - '@console.string_converter'
+      - '@console.validator'
+      - '@app.root'
+      - '@console.site'
+      - '@http_client'
+    tags:
+      - { name: drupal.command }
+  console.generate_route_subscriber:
+    class: Drupal\Console\Command\Generate\RouteSubscriberCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.route_subscriber_generator'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_service:
+    class: Drupal\Console\Command\Generate\ServiceCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.service_generator'
+      - '@console.string_converter'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_theme:
+    class: Drupal\Console\Command\Generate\ThemeCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.theme_generator'
+      - '@console.validator'
+      - '@app.root'
+      - '@theme_handler'
+      - '@console.site'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_twig_extension:
+    class: Drupal\Console\Command\Generate\TwigExtensionCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.twig_extension_generator'
+      - '@console.site'
+      - '@console.string_converter'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_update:
+    class: Drupal\Console\Command\Generate\UpdateCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.update_generator'
+      - '@console.site'
+      - '@console.chain_queue'
+    tags:
+      - { name: drupal.command }
+  console.generate_pluginblock:
+    class: Drupal\Console\Command\Generate\PluginBlockCommand
+    arguments:
+      - '@config.factory'
+      - '@console.chain_queue'
+      - '@console.pluginblock_generator'
+      - '@entity_type.manager'
+      - '@console.extension_manager'
+      - '@console.validator'
+      - '@console.string_converter'
+      - '@plugin.manager.element_info'
+    tags:
+      - { name: drupal.command }
+  console.generate_command:
+    class: Drupal\Console\Command\Generate\CommandCommand
+    arguments:
+      - '@console.command_generator'
+      - '@console.extension_manager'
+      - '@console.validator'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_ckeditorbutton:
+    class: Drupal\Console\Command\Generate\PluginCKEditorButtonCommand
+    arguments:
+      - '@console.chain_queue'
+      - '@console.command_ckeditorbutton'
+      - '@console.extension_manager'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_entitycontent:
+    class: Drupal\Console\Command\Generate\EntityContentCommand
+    arguments:
+      - '@console.chain_queue'
+      - '@console.entitycontent_generator'
+      - '@console.string_converter'
+      - '@console.extension_manager'
+      - '@console.validator'
+    tags:
+      - { name: drupal.command }
+  console.generate_entitybundle:
+    class: Drupal\Console\Command\Generate\EntityBundleCommand
+    arguments:
+      - '@console.validator'
+      - '@console.entitybundle_generator'
+      - '@console.extension_manager'
+    tags:
+      - { name: drupal.command }
+  console.generate_entityconfig:
+    class: Drupal\Console\Command\Generate\EntityConfigCommand
+    arguments:
+      - '@console.extension_manager'
+      - '@console.entityconfig_generator'
+      - '@console.validator'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.generate_cache_context:
+    class: Drupal\Console\Command\Generate\CacheContextCommand
+    arguments:
+      - '@console.cache_context_generator'
+      - '@console.chain_queue'
+      - '@console.extension_manager'
+      - '@console.string_converter'
+    tags:
+      - { name: drupal.command }
+  console.image_styles_debug:
+    class: Drupal\Console\Command\Image\StylesDebugCommand
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: drupal.command }
+  console.image_styles_flush:
+    class: Drupal\Console\Command\Image\StylesFlushCommand
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: drupal.command }
+  console.breakpoints_debug:
+    class: Drupal\Console\Command\Breakpoints\DebugCommand
+    arguments:
+      - '@breakpoint.manager'
+      - '@app.root'
+    tags:
+      - { name: drupal.command }

@@ -1,0 +1,19 @@
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE3 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+Namespace(batch_size=100, board_path=0.8, display_step=50, gpu=False, height=28, keep_prob=0.8, learning_rate=0.001, load_path='models-drupal/checkpoint-100', model_dir='tensorflow/runTrainingJob/models-drupal', num_classes=13, optimizer='ADAM', width=28)
+no saved model to load. starting new session clasification
+('step:', 50, ' loss train:', 0.7296, ', acc train:', 0.8104, ', acc test:', 0.62)
+('step:', 100, ' loss train:', 0.0566, ', acc train:', 0.991, ', acc test:', 0.74)
+('step:', 150, ' loss train:', 0.0109, ', acc train:', 0.9998, ', acc test:', 0.73)
+('step:', 200, ' loss train:', 0.0054, ', acc train:', 1.0, ', acc test:', 0.72)
+('step:', 250, ' loss train:', 0.0031, ', acc train:', 1.0, ', acc test:', 0.72)
+('step:', 300, ' loss train:', 0.0023, ', acc train:', 1.0, ', acc test:', 0.83)
+('step:', 350, ' loss train:', 0.0016, ', acc train:', 1.0, ', acc test:', 0.7)
+('step:', 400, ' loss train:', 0.0013, ', acc train:', 1.0, ', acc test:', 0.74)
+('step:', 450, ' loss train:', 0.0011, ', acc train:', 1.0, ', acc test:', 0.78)
+model saved preprocesing!
+{"status": "ok", "checkpoints_files": "tensorflow/runTrainingJob/models-drupal/checkpoint-500"}

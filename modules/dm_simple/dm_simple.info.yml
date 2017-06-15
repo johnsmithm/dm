@@ -1,0 +1,9 @@
+name: Data master simple
+type: module
+description: Provides api for tensorflow.
+
+
+version: '8.x-1.x-dev'
+core: '8.x'
+
+datestamp: 1489606986

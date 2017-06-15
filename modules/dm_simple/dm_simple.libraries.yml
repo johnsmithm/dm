@@ -1,0 +1,23 @@
+# Show how weights work.
+dm_simple.test:
+# Add css file.
+  css:
+    component:
+      css/mystyle.css: {}
+  # Add js file.
+  js:
+    # weight is used as example attribute, but please avoid it and instead use
+    # dependencies for order loading.
+    #js/konva.min.js:{}
+    js/myscript.js: {  }
+  dependencies:
+    - core/jquery.ui.sortable
+    - core/jquery.ui.slider
+    - core/jquery.ui.dialog
+  #dependencies:
+   # - core/jquery
+    #- core/drupalSettings
+conva.min:
+  version: VERSION
+  js:
+    /libraries/conva.min.js: {}
