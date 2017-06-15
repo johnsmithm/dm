@@ -540,10 +540,12 @@
 					        	argsP.imgH = path_i[2];
 					        	argsP.imgW = path_i[1];
 					        	argsP.fid = path_i[3];
+					        	var arr = argsP.path_i.split('/').splice(3, 10);
+					        	console.log(arr.join('/'));
 					        	$.post(urlS, {'action':'square',
 									'height':argsP.imgH,
 									'width':argsP.imgW,
-									'path':argsP.path_i.split('http://localhost:8006/')[1]},
+									'path':arr.join('/')},
 										function(result){
 										console.log(result);
 										argsP.type = 'square';

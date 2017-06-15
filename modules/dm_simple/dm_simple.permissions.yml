@@ -1,0 +1,3 @@
+# Permissions for the field_permission_example module
+'view dm_simple':
+  title: View dm simple page

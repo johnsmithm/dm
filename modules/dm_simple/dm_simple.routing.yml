@@ -5,7 +5,7 @@ dm_simple:
     _controller: '\Drupal\dm_simple\Controller\DMSController::simple'
     _title: 'Clasificarea celulelor unui tabel'
   requirements:
-    _permission: 'access content'
+    _permission: 'view dm_simple'
 
 dm_simple_ajax:
   path: 'dm_simple/ajax'
@@ -13,4 +13,4 @@ dm_simple_ajax:
     _controller: '\Drupal\dm_simple\Controller\DMSController::ajax'
     _title: 'Page Ajax'
   requirements:
-    _permission: 'access content'
+    _permission: 'view dm_simple'
