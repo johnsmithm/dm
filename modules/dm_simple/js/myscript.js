@@ -512,7 +512,7 @@
 	          this.layerI.add(groupM);
 	        }
 	        this.addChoiseImages = function(){
-	        	
+
 	        	for(var i=0;i<4;++i)
 	        		for(var j=0;j<5;++j){
 	        			if(args.path_i.length <= i*3+j )
@@ -641,8 +641,8 @@
       	$('#buttons').hide()
 		$('#backStage').attr("disabled", true);
       	//
-      	var urlS = "http://localhost:8000/server";
-		
+      	var urlS = "http://"+window.location.hostname+":8000/server";
+		console.log(window.location.hostname);
 		stage = new Stage(argsP);
 		var history = {};
 		stage.logic();
