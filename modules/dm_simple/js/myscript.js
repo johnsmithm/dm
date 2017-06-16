@@ -512,10 +512,10 @@
 	          this.layerI.add(groupM);
 	        }
 	        this.addChoiseImages = function(){
-
+	        	
 	        	for(var i=0;i<4;++i)
 	        		for(var j=0;j<5;++j){
-	        			if(args.path_i.length <= i*3+j)
+	        			if(args.path_i.length <= i*3+j )
 	        				continue;
 	        			function addI(xx,yy,path_i,layer){
 	        				var imgK = new Konva.Image({
@@ -601,13 +601,13 @@
       	$('#buttons').append('<input type="button" id="resetDMS" value="Reset">'); 
       	$('#buttons').append('<input type="button" id="backStage" value="Back">');
       	$('#buttons').append('<input type="button" id="nextStage" value="Next">'); 
-      	$('#buttons').append('<input type="button" id="downloadExcel" value="Excel">'); 
+      	$('#buttons').append('<input type="button" id="downloadExcel" value="Download">'); 
       	$('#buttons').append('Help<input type="checkbox" id="helpDMS">');
       	$('#buttons').append('<div style="width:200px;" id="zoomslider"></div>Zoom');
 
       	$( "#zoomslider" ).slider({range: "max",
                   min: 1,
-                  max: 10,
+                  max: 15,
                   value: 5,slide: function( event, ui ) {
                   //alert( ui.value );
                   argsP.scale = ui.value/10.;
@@ -648,20 +648,68 @@
 		stage.logic();
 		function helpVideos(){
 			var id = 'GsmKcBH2rJY';
-			if(argsP.type=='square')
+			var title = "Fereastra de ajutor";
+			var body = $("<div>");
+			
+			if(argsP.type=='square'){
 				id = 'tBDqxf7lrbg';
+				body.append($("<p>").append("Misca patratele cu mausul pentru "+
+				"a delimita pagina sau tabelul, daca ai delimitat tabelul "+
+				"indica in select box 'Find lines' pentru a gasi liniile tabelului."+
+				" In fereastra ce apare indica numarul de linii si coloane a "+
+				"tabelului. Daca nu doresti sa clasifici toate celulele indica "+
+				" numarul de linii ce delimiteaza celulele pentru clasificare."+
+				" Pentru a folosi tastatura pentru a misca patratele apasa/misca cu "+
+				"mausul patratul dorit, apoi foloseste tastele A,S,W,D pentru a "+
+				"pozitiona patratul in colturile paginii/tabelului."));
+				body.append($("<p>").append("Pentru a mari imaginea foloseste "+
+					"sliderul de langa cuvantul 'Zoom'. "));
+				body.append($("<p>").append(" Apasa pe butonul 'Next' pentru a"+
+					" redimensiona imaginea la dimensiunea tabelului sau paginii. "));
+			}
 
 			if(argsP.type=='lines' ){
-							id = '8jSGCwDffQk';
-							if( $('#selectDMS').val()=='2')
-								id = 'FruSRtPaniA';
+				id = '8jSGCwDffQk';
+				if( $('#selectDMS').val()=='2'){
+					id = 'FruSRtPaniA';
+					body.append($("<p>").append(" Pentru a pozitiona liniile la "+
+						"aceeasi distanta intre ele misca o linie in pozitia corecta."+
+						" In fereastra care apare scrie ce distanta in pixeli trebuie "+
+						" sa fie pana la urmatoarea linie(sus in jos, stanga la dreapta). "+
+						"Initial in fereastra este indicata distanta curenta. Dupa ce apasati "+
+						"pe butonul ok, apare o fereastra cu un slider. Cu acel slider se "+
+						" seteaza distanta dintre toate liniile de dupa linia miscata. "+
+						"Dupa ce ati apasat pe slider puteri folosi si sagetile pentru a "+
+						"seta distanta dintre linii."));
+				}else{
+					body.append($("<p>").append("Misca liniile cu ajutorul mausului "+
+					"pana cand ajung la pozitia dorita. Daca tabelul nu este "+
+					" redimensionat corect poti folosi butonul 'Back' pentru "+
+					" a pozitiona din nou patratele la colturile tabelului. "+
+					" Exista optiunea de a misca liniile odata cu aceeasi distanta."+
+					" Alege optiunea 'Slider' din selectbox si citeste instructiunile. "+
+					" Liniile pot fi miscate si cu ajutorul tastelor A,W,S,D."));
+				
+				}
+				body.append($("<p>").append("Dupa ce ati terminat de aliniat liniile apasati"+
+					" butonul 'Next'. In Fereastra ce apare indicati ce randuri si coloane "+
+					" sa fie clasificate. Indicati prima coloana incepand cu zero:) si "+
+				" numarul de coloane. La fel si pentru randuri."))
 			}
-			if(argsP.type=='pred')
+			if(argsP.type=='pred'){
 				id = 'oYMt5bZVR2k';
+				body.append($("<p>").append("Apasati pe celula care este clasificata gresit"+
+					" apoi apasati pe nota corecta din fereastra care apare. "+
+					" este posibil de Descarcat tabelul in format Electronic sau de "+
+					"intors la pasul precedent folosind butonul 'Back'"))
+			}
+			body.append(' Daca nu doresti sa vezi aceste mesaje ajutatoare '+
+				"debifeaza checkboxul 'Help'");
 			//todo: add text with images also
 			$('#dialog').html('<iframe id="playerID" width="420" height="315"'+
 			'src="https://www.youtube.com/embed/'+id+'?autoplay=1">'+
-			'</iframe>').dialog({buttons:{},width:500,close: function( event, ui ) {
+			'</iframe>').append(body).attr('title',title).
+			dialog({buttons:{},width:500,close: function( event, ui ) {
 				$("#dialog #playerID").attr("src","");
 			}});
 		}
@@ -774,8 +822,8 @@
 			                
 			            });
 				}else{
-					$('#dialog').html('Colums:<input id="mds_cols" name="cols"><br />'+
-						'Rows:<input id="mds_rows" name="rows">')
+					$('#dialog').html('Columns:<input type="number" max="60" min="1" id="mds_cols" name="cols"><br />'+
+						'Rows:<input id="mds_rows" type="number" max="60" min="1" name="rows">')
 					.dialog({buttons: {
 				        Ok: function() {
 				          if($('#mds_cols').val()=='' || $('#mds_rows').val()==''){
@@ -786,6 +834,10 @@
 				            history.stage2 = $.extend({}, argsP);
 				            argsP.cols = parseInt($('#mds_cols').val());
 				            argsP.rows = parseInt($('#mds_rows').val());
+				            if(argsP.cols>60)
+				            	argsP.cols = 60;
+				            if(argsP.rows>60)
+				            	argsP.rows = 60;
 				            localStorage['dm_simple_offsetx_cols'] = argsP.cols;
 				            localStorage['dm_simple_offsetx_rows'] = argsP.rows;
 				            $.post("/dm_simple/ajax", {'data':argsP,'action':'lines'},
@@ -842,16 +894,16 @@
 		        	modelS.append($("<option value='"+argsP.models[i][0]+"'>").
 		        		text(argsP.models[i][1]));
 		        }
-				$('#dialog').html('First colum:<input id="mds_col" name="col"><br />'+
-						'Number colums:<input id="mds_cols" name="cols"><br />'+
-						'First row:<input id="mds_row" name="row"><br />'+
-						'Number rows:<input id="mds_rows" name="rows"><br />'+
-						'Model:').append(modelS)
+				$('#dialog').html('First column:<input id="mds_col" type="number" max="60" min="0" name="col"><br />'+
+						'Number columns:<input type="number" max="60" min="0" id="mds_cols" name="cols"><br />'+
+						'First row:<input id="mds_row"  type="number" max="60" min="0"  name="row"><br />'+
+						'Number rows:<input id="mds_rows" type="number" max="60" min="0" name="rows"><br />'+
+						'')//.append(modelS)
 					.dialog({buttons: {
 				        Ok: function() {
 				          if($('#mds_cols').val()=='' || $('#mds_rows').val()=='' ||
 				          	$('#mds_col').val()=='' || $('#mds_row').val()==''){
-				          	alert('Set the number of colums and rows!');
+				          	alert('Set the number of columns and rows!');
 				          }else{			          	
 				          	argsP.po1 = po1;  
 				          	argsP.po2 = po2;          
@@ -865,7 +917,7 @@
 				            localStorage['dm_simple_offsety1'] = argsP.offsety[1];
 				            localStorage['dm_simple_offsetx0'] = argsP.offsetx[0];
 				            localStorage['dm_simple_offsety0'] = argsP.offsety[0];
-				            argsP.model = $('#modelSelect').val();
+				            argsP.model = 0;//$('#modelSelect').val();
 				            localStorage['dm_simple_model'] = argsP.model;
 				            var models = argsP.models;
 				            argsP.models = [];
@@ -900,7 +952,7 @@
 				          }
 				        }
 				      }});
-				$('#modelSelect').val(localStorage['dm_simple_model']||'0');
+				//$('#modelSelect').val(localStorage['dm_simple_model']||'0');
 				$('#mds_col').val(localStorage['dm_simple_offsetx0']||'0');
 				$('#mds_cols').val(localStorage['dm_simple_offsetx1']||argsP.vLines.length-1);
 				$('#mds_row').val(localStorage['dm_simple_offsety0']||'0');

@@ -11,6 +11,8 @@ dm_simple.test:
     #js/konva.min.js:{}
     js/myscript.js: {  }
   dependencies:
+    - core/jquery.once
+    - core/drupal
     - core/jquery.ui.sortable
     - core/jquery.ui.slider
     - core/jquery.ui.dialog

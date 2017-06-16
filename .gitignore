@@ -6,3 +6,4 @@ tensorflow/opencv.sh
 tensorflow/runT*
 tensorflow/models/*
 tensorflow/pyimagesearch/*
+tensorflow/flask.txt

@@ -12,7 +12,9 @@
  * time the Drupal cron runs. We then decide what has to happen in response.
  *
  * Delete the image made while procesing 
- 
+ */
 function dm_simple_cron() {
-
-}/*
+	//todo: check the day
+	exec("rm sites/default/files/tensorflow/page-*.jpg");
+	exec('rm sites/default/files/tensorflow/table-*.jpg');
+}

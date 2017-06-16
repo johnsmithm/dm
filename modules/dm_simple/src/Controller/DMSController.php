@@ -60,6 +60,7 @@ class DMSController extends ControllerBase {
         $file = file_load($fid);     
         $image_factory = \Drupal::service('image.factory');
         $image = $image_factory->get($file->getFileUri());
+        if (!in_array($fid,[34,38]))
         $path_i[] = [file_create_url($file->getFileUri()),
                      $image->getWidth(), $image->getHeight(),$fid];
         //dsm($value->toArray()['title'][0]['value']);
@@ -79,7 +80,7 @@ class DMSController extends ControllerBase {
        
       </div>
       <div  id="container"></div>
-      <div id="dialog" title="Basic dialog"></div>
+      <div id="dialog" style="height:300px;overflow: scroll;" title="Basic dialog"></div>
       ',
     );
 
@@ -181,7 +182,7 @@ class DMSController extends ControllerBase {
           $points .= '-';
         $points .= floor($value[0])."-".floor($value[1]);
       }
-      exec("rm sites/default/files/tensorflow/page-".$data['fid']."*.jpg");
+      //exec("rm sites/default/files/tensorflow/page-".$data['fid']."*.jpg");
       $command = 'python tensorflow/run.py --path '.'sites'.explode('/sites',
       $path_i)[1].' --stage crop --points '.$points.' --height '.$image->getHeight().
       ' --width '.$image->getWidth().' --path_s '.$paths ;
@@ -215,7 +216,7 @@ class DMSController extends ControllerBase {
       
       $cols = $data['cols'];
       $rows = $data['rows'];
-      exec('rm sites/default/files/tensorflow/table-'.$data['fid'].'*.jpg');
+      //exec('rm sites/default/files/tensorflow/table-'.$data['fid'].'*.jpg');
       $command = 'python tensorflow/run.py --path '.'sites'.explode('/sites',
       $path_i)[1].' --stage lines --points '.$points.
       ' --cols '.$cols.' --rows '.$rows.
@@ -255,7 +256,7 @@ class DMSController extends ControllerBase {
       $rows = $data['rows'];
 
       $modelPath = '';
-      if( $data['model']!=''){
+      if(False and $data['model']!=''){
         $modelNode = node_load($data['model']*1);
         if(count($modelNode->get('field_metagraph')->getValue())>0 &&
           count($modelNode->get('field_graph_variables')->getValue())>0){
