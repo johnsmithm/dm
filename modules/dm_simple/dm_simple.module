@@ -15,6 +15,8 @@
  */
 function dm_simple_cron() {
 	//todo: check the day
-	exec("rm sites/default/files/tensorflow/page-*.jpg");
-	exec('rm sites/default/files/tensorflow/table-*.jpg');
+	if(count(scandir('sites/default/files/tensorflow'))>50){
+		exec("rm sites/default/files/tensorflow/page-*.jpg");
+		exec('rm sites/default/files/tensorflow/table-*.jpg');
+	}
 }

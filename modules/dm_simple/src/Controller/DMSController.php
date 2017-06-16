@@ -39,7 +39,11 @@ class DMSController extends ControllerBase {
       !file_load($_SESSION['dm_simple_FID']))){
   		return \Drupal::formBuilder()->getForm('Drupal\dm_simple\Form\DMSimpleForm');
   	}
-
+    if(!isset($_SESSION['dm_simple_TIMES']))
+      $_SESSION['dm_simple_TIMES'] = 0;
+    if($_SESSION['dm_simple_TIMES']>20)
+    return ['content'=>['#markup'=>
+    '<p>Sunt permise 20 incercari pentru o zi!</p>']];
     #$result = self::make_post_request(['action'=>'433']);
     #dsm($result);
     if($notAut){
@@ -238,6 +242,7 @@ class DMSController extends ControllerBase {
       }
       $result['poi'] = $command;      
     }else if($_REQUEST['action'] == 'predict'){
+      $_SESSION['dm_simple_TIMES'] += 1;
       $path_i = $data['path_i'];
       $vLines = '';
       foreach ($data['vLines'] as $key => $value) {
