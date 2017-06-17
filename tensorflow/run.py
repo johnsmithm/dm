@@ -641,7 +641,7 @@ def logic(args):
         out['pathGraph'] = args.pathGraph
         out['pathVars'] = args.pathVars
         out = getCells(image,hLines,vLines,out)#each cell from each row
-
+        out['ans'] = 1
         #print (json.dumps(out))
         return out
     return "{'status':'error'}"

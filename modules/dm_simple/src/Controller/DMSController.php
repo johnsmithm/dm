@@ -41,9 +41,9 @@ class DMSController extends ControllerBase {
   	}
     if(!isset($_SESSION['dm_simple_TIMES']))
       $_SESSION['dm_simple_TIMES'] = 0;
-    if($_SESSION['dm_simple_TIMES']>20)
+    if($_SESSION['dm_simple_TIMES']>10)
     return ['content'=>['#markup'=>
-    '<p>Sunt permise 20 incercari pentru o zi!</p>']];
+    '<p>Sunt permise 10 incercari pentru o zi pentru utilizatorii neinregistrati!</p>']];
     #$result = self::make_post_request(['action'=>'433']);
     #dsm($result);
     if($notAut){
@@ -279,7 +279,7 @@ class DMSController extends ControllerBase {
       }
       
       $command = 'python tensorflow/run.py --path '.'sites'.explode('/sites',
-      $path_i)[1].' --stage predict '.
+      $path_i)[1].' --stage predict'.
       ' --cols '.$cols.' --rows '.$rows.
       ' --path_s sites/default/files/tensorflow/table-'.$data['fid'].'.jpg'.
       ' --vLines '.$vLines.' --hLines '.$hLines.$modelPath;

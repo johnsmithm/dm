@@ -1,8 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
+import datetime
 import run
 app = Flask(__name__)
+app.secret_key = 'any random string'
 CORS(app)
+
 
 @app.route('/')
 def hello_world():
@@ -28,7 +31,22 @@ def getServerInfo():
 			setattr(run.args, key.strip(), value.strip())
 
 	print(run.args)
-	return jsonify(run.logic(run.args))
+	
+	if run.args.stage == 'predict':
+		file = open("tensorflow/s.txt","r") 
+		v = file.read() 
+		print(v,'-'*100)
+		if v == '1':
+			return jsonify({'ans':None})
+		file = open("tensorflow/s.txt","w") 
+		file.write("1") 		 
+		file.close() 
+	out = jsonify(run.logic(run.args))
+	if run.args.stage == 'predict':
+		file = open("tensorflow/s.txt","w") 
+		file.write("0") 		 
+		file.close()
+	return out
 
 if __name__ == '__main__':
 	print (run.args)

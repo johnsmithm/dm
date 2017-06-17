@@ -927,18 +927,24 @@
 					            function(result){
 					                console.log(result);
 					                flaskRequest(result['command'],function(result1){
-						                argsP.type = 'pred';
+						                
 						                //argsP.imgH = result.heightT;
 						                //argsP.imgW = result.widthT;
 						                argsP.predictions = result1.predictions;
 						                
 						                console.log(argsP);
-						                stage = new Stage(argsP);
-				                		stage.logic();
-				                		$('#downloadExcel').show();
-						                $("#nextStage").attr("disabled", false);
-						                if($('#helpDMS').prop('checked'))
-											helpVideos();
+						                if(result1['ans']==1){
+						                	argsP.type = 'pred';
+							                stage = new Stage(argsP);
+					                		stage.logic();
+					                		$('#downloadExcel').show();
+							                $("#nextStage").attr("disabled", false);
+							                if($('#helpDMS').prop('checked'))
+												helpVideos();
+				                		}else{
+				                			$("#nextStage").attr("disabled", false);
+				                			alert("There is one prediction running on the server, try again in a few seconds!");
+				                		}
 						                //show option to corect the table
 						            })
 					            });
