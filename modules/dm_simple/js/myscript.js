@@ -355,7 +355,7 @@
 	              x: (cell.x-ox)*this.ratio,//+(cell.width*this.ratio)/3,
 	              y: (row.y-oy)*this.ratio,// +(row.height*this.ratio)/3,
 	              text: cell.prediction>10?ll[cell.prediction]:cell.prediction,
-	              fontSize: 12,
+	              fontSize: 12*(0.7+this.ratio),
 	              fontFamily: 'Calibri',
 	              fill: 'green',
 	              id:'Timg-0-'+cell.col+'-'+row.row
