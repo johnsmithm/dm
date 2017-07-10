@@ -1,0 +1,15 @@
+name: 'Google Analytics Reports'
+type: module
+description: 'Display statistics from Google Analytics using Views.'
+package: Statistics
+# core: 8.x
+configure: google_analytics_reports_api.settings
+dependencies:
+  - google_analytics_reports_api
+
+
+# Information added by Drupal.org packaging script on 2016-07-10
+version: '8.x-3.0-beta1'
+core: '8.x'
+project: 'google_analytics_reports'
+datestamp: 1468152543
