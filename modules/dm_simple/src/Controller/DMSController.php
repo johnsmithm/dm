@@ -301,4 +301,34 @@ class DMSController extends ControllerBase {
     }
     return new JsonResponse($result);
   }
+
+  /**
+   * Constructs a sequence page.
+   *
+   * The router _controller callback, maps the path
+   * 'sequence' to this method.
+   *
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   If the parameters are invalid.
+   */
+  function dm_sequence(){
+    $build = array();
+
+    $build['#attached']['library'][] = 'dm_simple/conva.min';
+    $build['#attached']['library'][] = 'dm_simple/sequence.test';
+
+    $build['content'] = array(
+      '#markup' => '
+      <div id="buttons">
+      </div>
+      <div  id="container"></div>
+      
+      <div id="dialog" style="height:300px;overflow: scroll;" title="Basic dialog"></div>
+      ',
+    );
+    $build['#cache']['max-age'] = 0;
+
+    return $build;
+  }
 }

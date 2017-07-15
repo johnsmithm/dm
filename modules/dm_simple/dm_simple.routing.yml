@@ -7,6 +7,14 @@ dm_simple:
   requirements:
     _permission: 'view dm_simple'
 
+dm_sequence:
+  path: 'dm_sequence'
+  defaults:
+    _controller: '\Drupal\dm_simple\Controller\DMSController::dm_sequence'
+    _title: 'Recunoasterea scrisului de mana'
+  requirements:
+    _permission: 'view dm_simple'
+
 dm_simple_ajax:
   path: 'dm_simple/ajax'
   defaults:

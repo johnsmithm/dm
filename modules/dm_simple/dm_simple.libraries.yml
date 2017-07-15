@@ -23,3 +23,19 @@ conva.min:
   version: VERSION
   js:
     /libraries/conva.min.js: {}
+
+# Show how weights work.
+sequence.test:
+# Add css file.
+  css:
+    component:
+      css/mystyle.css: {}
+  # Add js file.
+  js:
+    # weight is used as example attribute, but please avoid it and instead use
+    # dependencies for order loading.
+    #js/konva.min.js:{}
+    js/sequence.js: {  }
+  dependencies:
+    - core/jquery.once
+    - core/drupal
