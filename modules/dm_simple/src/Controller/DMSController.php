@@ -94,6 +94,7 @@ class DMSController extends ControllerBase {
     // find it using jQuery.
     $build['content'] = array(
       '#markup' => '
+       <h5>Pentru a incarca propriile fotografii inregistrativa!</h5>
       <div id="buttons">
        
       </div>
@@ -363,6 +364,7 @@ class DMSController extends ControllerBase {
 
     $build['content'] = array(
       '#markup' => '
+      <h5>Pentru a incarca propriile fotografii inregistrativa!</h5>
       <div id="buttons">
       </div>
       <div  id="container"></div>
