@@ -12,6 +12,10 @@
    */
   Drupal.behaviors.jsTestRedWeight = {
     attach: function (context, settings) {
+      $(document).on({
+		    ajaxStart: function() { $("body").addClass("loading");    },
+		    ajaxStop: function() { $("body").removeClass("loading"); }    
+	  });
       var argsP = drupalSettings.dm_simple.dm_simple;
       argsP.width = window.innerWidth;
       console.log(argsP);
@@ -334,7 +338,6 @@
 		                  this.stroke('green');
 		                  this.strokeWidth(2);
 		                  console.log(this.getId());
-		                  
 		                  var groupMI = layer2.find('#groupM')[0];
 		                  var xx = parseInt(this.x());
 		                  var yy = this.y();
@@ -346,6 +349,11 @@
 		                  layer2.show();
 		                  layer2.draw();
 		                  layer1.draw();
+
+		                  $('#textboxes').show();//add reference to cell
+		                  //add click function to change prediction
+		                  $('#textboxes input').val(cell.prediction).css({'left':xx+'px',
+		              		'top':yy+'px'}).focus();
 		               }else
 		               		customCorrector();
 	              });
@@ -491,8 +499,31 @@
 	                  imgM.strokeWidth(0);
 	                  layer.draw();
 	                  layer1.hide();	     
-	                               
+	                  $('#textboxes').hide();
 	              });
+
+		          var layer43 = this.layerL;
+	              var layer14 = this.layerI;
+				  $('#textboxes input').unbind( "keypress" ).on("keypress", function(e) {
+						        if (e.keyCode == 13) {
+						            console.log("Enter pressed");
+						            console.log(imgId);
+						            var imgM = layer43.find('#'+imgId)[0];
+						            var textI = layer43.find('#T'+imgId)[0];
+						            textI.text($(this).val());
+						            var colId = parseInt(imgId.split('-')[2]); 
+				                    var rowId = parseInt(imgId.split('-')[3]);  
+				                    setNewPrediction(predictions,
+				                    	colId,rowId,$(this).val());
+	                    
+					                imgM.stroke('red');
+					                imgM.strokeWidth(0);
+					                layer43.draw();
+					                layer14.hide();
+		                  			$('#textboxes').hide();
+						            return false; // prevent the button click from happening
+						        }
+						});
 	              simpleLabel.on('mouseover', function() {
 	              	this.getTag().fill('green');
 	              	layer1.draw();
@@ -579,6 +610,7 @@
 		        	this.stage.add(this.layerL);
 		        	this.stage.add(this.layerB);
 		    	}else if(this.type == 'lines'){
+		    		//$('#database').show();
 		    		this.addLines();
 		        	this.stage.add(this.layerI);
 		        	this.stage.add(this.layerL);
@@ -588,6 +620,8 @@
 		        	this.stage.add(this.layerL);
 		        	this.layerI.hide();
 		        	this.stage.add(this.layerI);
+
+
 		        }else if(this.type == 'init'){
 		        	this.addChoiseImages();
 		        	this.stage.add(this.layerI);
@@ -602,8 +636,12 @@
       	$('#buttons').append('<input type="button" id="backStage" value="Back">');
       	$('#buttons').append('<input type="button" id="nextStage" value="Next">'); 
       	$('#buttons').append('<input type="button" id="downloadExcel" value="Download">'); 
+      	$('#buttons').append('<input type="button" id="database" value="Json">');
       	$('#buttons').append('Help<input type="checkbox" id="helpDMS">');
       	$('#buttons').append('<div style="width:200px;" id="zoomslider"></div>Zoom');
+
+      	$('#textboxes').append('<input type="text" name="editNames">');
+      	$('#database').hide();
 
       	$( "#zoomslider" ).slider({range: "max",
                   min: 1,
@@ -731,6 +769,7 @@
 			localStorage.removeItem('dm_simple_offsetx0');
 			localStorage.removeItem('dm_simple_offsetx_cols');
 			localStorage.removeItem('dm_simple_offsetx_rows');
+			localStorage.removeItem('dm_simple_colmnN');
 			localStorage.removeItem('dm_simple_model');
 			//localStorage.removeItem('helpDMS');
 			$.post("/dm_simple/ajax", {'action':'reset'}, 
@@ -898,6 +937,7 @@
 						'Number columns:<input type="number" max="60" min="0" id="mds_cols" name="cols"><br />'+
 						'First row:<input id="mds_row"  type="number" max="60" min="0"  name="row"><br />'+
 						'Number rows:<input id="mds_rows" type="number" max="60" min="0" name="rows"><br />'+
+						'Names column:<input id="mds_name" type="number" max="60" min="0" name="colname"><br />'+
 						'')//.append(modelS)
 					.dialog({buttons: {
 				        Ok: function() {
@@ -913,6 +953,8 @@
 				            argsP.offsety[1] = parseInt($('#mds_rows').val());
 				            argsP.offsetx[0] = parseInt($('#mds_col').val());
 				            argsP.offsety[0] = parseInt($('#mds_row').val());
+				            argsP.colmnN = $('#mds_name').val();
+				            localStorage['dm_simple_colmnN'] = argsP.colmnN;
 				            localStorage['dm_simple_offsetx1'] = argsP.offsetx[1];
 				            localStorage['dm_simple_offsety1'] = argsP.offsety[1];
 				            localStorage['dm_simple_offsetx0'] = argsP.offsetx[0];
@@ -923,7 +965,8 @@
 				            argsP.models = [];
 				            console.log(argsP);
 				            //todo: veryfy with nrCols/rows
-				            $.post("/dm_simple/ajax", {'data':argsP,'action':'predict'},
+				            $.post("/dm_simple/ajax", {'data':argsP,
+				            	'action':'predict'},
 					            function(result){
 					                console.log(result);
 					                flaskRequest(result['command'],function(result1){
@@ -958,7 +1001,9 @@
 				          }
 				        }
 				      }});
+				//dm_simple_colmnN
 				//$('#modelSelect').val(localStorage['dm_simple_model']||'0');
+				$('#mds_name').val(localStorage['dm_simple_colmnN']||'');
 				$('#mds_col').val(localStorage['dm_simple_offsetx0']||'0');
 				$('#mds_cols').val(localStorage['dm_simple_offsetx1']||argsP.vLines.length-1);
 				$('#mds_row').val(localStorage['dm_simple_offsety0']||'0');
@@ -996,6 +1041,43 @@
         appendTo('#dialog');
         $('#dialog').dialog({width:500,buttons:{}});
       })
+	    $('#database').click(function(){
+	    	var vL = "", hL = "";
+		    for(var i in stage.hLines){
+		            var box = stage.layerL.find('#lineH_'+i)[0];
+		            var p = box.getPoints();
+		            var vl = (box.y()+p[1]-stage.initY)*(1./stage.ratio);
+		            if (vl<0)vl=0;
+		            hL+='-'+vl;
+		          }
+		    for(var i in stage.vLines){
+		            var box = stage.layerL.find('#lineV_'+i)[0];
+		            var p = box.getPoints();
+		            var vl = (p[0]+box.x()-stage.initX)*(1./stage.ratio);
+		            if( vl<0)vl=0;
+		            vL+="-"+vl;
+		          }
+	    	console.log(argsP);
+	    	console.log(vL,hL);
+	    	function downloadURI(uri, name) {
+			  var link = document.createElement("a");
+			  link.download = name;
+			  link.href = uri;
+			  document.body.appendChild(link);
+			  link.click();
+			  document.body.removeChild(link);
+			  //delete link;
+			}
+	    	$.post(urlS, {'action':'json','path':argsP.path_i,
+	    					'vl':vL,'hL':hL,
+	    					'po':argsP.po, 'po1':argsP.po1,
+	    					'po2':argsP.po2, 'fid':argsP.fid,
+	    					'h':argsP.height,'w':argsP.width},
+				function(result){
+				console.log(result);
+				downloadURI("tensorflow/json/json.mat", "json.mat");
+			});
+	    })
  	}
   };
 })(jQuery, Drupal, drupalSettings);

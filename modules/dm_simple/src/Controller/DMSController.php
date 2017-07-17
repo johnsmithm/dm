@@ -34,19 +34,22 @@ class DMSController extends ControllerBase {
    *   If the parameters are invalid.
    */
   public function simple() {
-    $notAut = False;
+    $current_user = \Drupal::currentUser();
+    #dsm($current_user);
+    $notAut = !isset($_REQUEST['imgs']) && ($current_user->id()!=0);
+    dsm($notAut);
   	if ($notAut && (!isset($_SESSION['dm_simple_FID']) || $_SESSION['dm_simple_FID']==0 ||
       !file_load($_SESSION['dm_simple_FID']))){
   		return \Drupal::formBuilder()->getForm('Drupal\dm_simple\Form\DMSimpleForm');
   	}
     if(!isset($_SESSION['dm_simple_TIMES']))
       $_SESSION['dm_simple_TIMES'] = 0;
-    if($_SESSION['dm_simple_TIMES']>10)
+    if($_SESSION['dm_simple_TIMES']>3 && $current_user->id()==0)
     return ['content'=>['#markup'=>
-    '<p>Sunt permise 10 incercari pentru o zi pentru utilizatorii neinregistrati!</p>']];
+    '<p>Sunt permise 3 incercari pentru o zi pentru utilizatorii neinregistrati!</p>']];
     #$result = self::make_post_request(['action'=>'433']);
     #dsm($result);
-    if($notAut){
+    if(!$notAut and False){
     	$fid = $_SESSION['dm_simple_FID'];
     	$file = file_load($fid);
       $path_i = file_create_url($file->getFileUri());
@@ -58,6 +61,17 @@ class DMSController extends ControllerBase {
       $nids = $query->execute();
       //dsm(node_load_multiple($nids));
       $path_i = [];
+      if($notAut && isset($_SESSION['dm_simple_FID']) && 
+        file_load($_SESSION['dm_simple_FID']) &&
+        $_SESSION['dm_simple_FID'] != 0){
+        $fid = $_SESSION['dm_simple_FID'];
+        $file = file_load($fid);
+        #dsm($file);
+        $image_factory = \Drupal::service('image.factory');
+        $image = $image_factory->get($file->getFileUri());
+        $path_i[] = [file_create_url($file->getFileUri()),
+                     $image->getWidth(), $image->getHeight(),$fid];
+      }
       $fid = 0;
       foreach (node_load_multiple($nids) as $key => $value) {
         $fid = $value->get('field_input_image')->getValue()[0]['target_id'];
@@ -83,8 +97,12 @@ class DMSController extends ControllerBase {
       <div id="buttons">
        
       </div>
-      <div  id="container"></div>
+      <div id="textboxes"></div>
+      <div  id="container">        
+      </div>
       <div id="dialog" style="height:300px;overflow: scroll;" title="Basic dialog"></div>
+      
+      <div class="modal"><!-- Place at bottom of page --></div>
       ',
     );
 
@@ -283,6 +301,10 @@ class DMSController extends ControllerBase {
       ' --cols '.$cols.' --rows '.$rows.
       ' --path_s sites/default/files/tensorflow/table-'.$data['fid'].'.jpg'.
       ' --vLines '.$vLines.' --hLines '.$hLines.$modelPath;
+      if($data['colmnN']!='')
+        $command .= ' --colmnN '.$data['colmnN'];
+      else
+        $command .= ' --colmnN -1';
       #dsm($command);
       
       $outC = [];#exec($command);
@@ -298,6 +320,12 @@ class DMSController extends ControllerBase {
       $result['poi'] = $command;
     }else if($_REQUEST['action'] == 'reset'){
       $_SESSION['dm_simple_FID'] = 0;
+    }else if($_REQUEST['action'] == 'count'){
+      $_SESSION['dm_simple_TIMES'] += 1;
+      $current_user = \Drupal::currentUser();
+      $result['count'] = 0;
+      if($_SESSION['dm_simple_TIMES']>3 && $current_user->id()==0)
+        $result['count'] = 1;
     }
     return new JsonResponse($result);
   }
@@ -313,7 +341,22 @@ class DMSController extends ControllerBase {
    *   If the parameters are invalid.
    */
   function dm_sequence(){
+    $current_user = \Drupal::currentUser();
+    if(!isset($_SESSION['dm_simple_TIMES']))
+      $_SESSION['dm_simple_TIMES'] = 0;
+    if($_SESSION['dm_simple_TIMES']>3 && $current_user->id()==0)
+      return ['content'=>['#markup'=>
+    '<p>Sunt permise 3 incercari pentru o zi pentru utilizatorii neinregistrati!</p>']];
+   
     $build = array();
+
+    #dsm($current_user);
+    $notAut = !isset($_REQUEST['imgs']) && ($current_user->id()!=0);
+    dsm($notAut);
+    if ($notAut && (!isset($_SESSION['dm_simple_FID']) || $_SESSION['dm_simple_FID']==0 ||
+      !file_load($_SESSION['dm_simple_FID']))){
+      return \Drupal::formBuilder()->getForm('Drupal\dm_simple\Form\DMSimpleForm');
+    }
 
     $build['#attached']['library'][] = 'dm_simple/conva.min';
     $build['#attached']['library'][] = 'dm_simple/sequence.test';
@@ -325,10 +368,29 @@ class DMSController extends ControllerBase {
       <div  id="container"></div>
       
       <div id="dialog" style="height:300px;overflow: scroll;" title="Basic dialog"></div>
+      <div class="modal"><!-- Place at bottom of page --></div>
       ',
     );
     $build['#cache']['max-age'] = 0;
-
+    $result = ['path'=>'/modules/dm_simple/imgs/a01-011u.png','stage'=>'img'];
+    if($notAut && isset($_SESSION['dm_simple_FID']) && 
+        file_load($_SESSION['dm_simple_FID']) &&
+        $_SESSION['dm_simple_FID'] != 0){
+      $fid = $_SESSION['dm_simple_FID'];
+      $file = file_load($fid);
+      #dsm($file);
+      $image_factory = \Drupal::service('image.factory');
+      //dsm($file->getFileUri());
+      $image = $image_factory->get($file->getFileUri());
+      $parts = explode('/', file_create_url($file->getFileUri()));
+      //dsm($parts);
+      for($i=0;$i<3;$i++)
+        unset($parts[$i]);
+      $url = implode('/', $parts);
+      //dsm($url);
+      $result['path'] = '/'.$url;//file_create_url($file->getFileUri());
+    }
+    $build['#attached']['drupalSettings']['dm_sequence']['dm_sequence'] = $result;
     return $build;
   }
 }

@@ -12,8 +12,13 @@
    */
   Drupal.behaviors.jsTestRedWeight = {
     attach: function (context, settings) {
-        //var argsP = drupalSettings.dm_simple.dm_simple;
-        var path = '/modules/dm_simple/imgs/a01-011u.png';//a01-011u/a01-003
+		$(document).on({
+		    ajaxStart: function() { $("body").addClass("loading");    },
+		    ajaxStop: function() { $("body").removeClass("loading"); }    
+		});
+        var argsP = drupalSettings.dm_sequence.dm_sequence;
+        console.log(argsP);
+        var path = argsP.path;//a01-011u/a01-003
         var urlS = "http://"+window.location.hostname+":8000/server";
         var realh=0, realw=0;
         var myh = 900, myw = 500;
@@ -136,7 +141,7 @@
 
 		$('#buttons').append('<input type="button" id="resetDMS" value="Reset">'); 
       	$('#buttons').append('<input type="button" id="next" value="Next">'); 
-      	$('#resetDMS').hide()
+      	//$('#resetDMS').hide()
 
       	var colors = ['red',"orange", "yellow",'green'];
       	var ints = [0.05,0.1,0.5,2.0];
@@ -226,6 +231,13 @@
 					layerS.draw();					
 					stage.add(layerS);
 					stage.add(layerT);
+					argsP.stage = 'pred';
+					$.post('/dm_simple/ajax', {'action':'count'}, 
+		            	function(re1){
+		            		if(re1['count']==1){
+		            			location.reload();
+		            		}
+		            	});
 			});
 	        /*imgK.scale({  x: this.ratio , y: this.ratio });
 	        imgK.y((row.y-oy)*this.ratio);
@@ -233,6 +245,14 @@
 	        */
       	})
       	$('#resetDMS').click(function(){
+      		if (argsP.stage == 'img'){
+      			$.post("/dm_simple/ajax", {'action':'reset'}, 
+		            	function(result){
+			                location.reload();
+			            });
+      			return;
+      		}
+      		argsP.stage = 'img';
 			imgK.crop({
 	                  x: 0,
 	                  y: 0,
@@ -247,7 +267,7 @@
 	        layerS.hide()
 	        layerT.hide()
 
-      		$(this).hide()
+      		//$(this).hide()
       		$('#next').show()
       	})
       	
