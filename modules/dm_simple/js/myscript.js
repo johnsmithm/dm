@@ -954,6 +954,9 @@
 				            argsP.offsetx[0] = parseInt($('#mds_col').val());
 				            argsP.offsety[0] = parseInt($('#mds_row').val());
 				            argsP.colmnN = $('#mds_name').val();
+				            if(1){//for live
+				            	argsP.colmnN  = '';
+				            }
 				            localStorage['dm_simple_colmnN'] = argsP.colmnN;
 				            localStorage['dm_simple_offsetx1'] = argsP.offsetx[1];
 				            localStorage['dm_simple_offsety1'] = argsP.offsety[1];

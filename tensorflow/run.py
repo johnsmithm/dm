@@ -351,10 +351,22 @@ def getCells(page,rowDots,collDots, out, debug=False):
     wR = 1.# out['width'] /page.shape[1]
 
     cells = []
-    for i in range(len(rowDots)-1):        
+    cellsCN = []
+    maxH = 0
+    for i in range(len(rowDots)-1): 
+        maxH = max(maxH,rowDots[i+1]-rowDots[i])
+    for i in range(len(rowDots)-1):   
+        #if i!=args.colmnN: continue     
         for j in range(len(collDots)-1):
             cellI = page[rowDots[i]:rowDots[i+1],collDots[j]:collDots[j+1]]
             cells.append(cellI)
+            if j == out['colmnN']:
+                gray = cv2.cvtColor(cellI, cv2.COLOR_BGR2GRAY)
+                gray = np.insert(gray, [gray.shape[0]]*(maxH-gray.shape[0]), 0., axis=0)
+                if i==2:
+                    cv2.imwrite('modules/dm_simple/imgs/test.png',gray)
+                print(gray.shape)                
+                cellsCN.append(gray)
     #rand_model, null_model, tf_cnn_slim_model
     #print(len(cells))
     probs = predictFast(cells)# tf_cnn_slim_model13(cells,pathGraph=out['pathGraph'],pathVars=out['pathVars'])
@@ -372,7 +384,7 @@ def getCells(page,rowDots,collDots, out, debug=False):
         row = {'y':rowDots[i]*hR, 'height':(rowDots[i+1]-rowDots[i])*hR,
         'row':i,'cells':cellsR}
         out['predictions'].append(row)
-    
+    out['cellsCN'] = cellsCN
     return out
 
 def reorderPoints(points,h,md=5):
@@ -637,11 +649,15 @@ def logic(args):
         #print(vLines)
         #print(args)
 
+        
+
         #predict - preprocess
         out['pathGraph'] = args.pathGraph
         out['pathVars'] = args.pathVars
+        out['colmnN'] = int(args.colmnN)
         out = getCells(image,hLines,vLines,out)#each cell from each row
-        out['ans'] = 1
+        out['ans'] = 1        
+        print(len(out['cellsCN']),'len cellsCN', out['colmnN'])
         #print (json.dumps(out))
         return out
     return "{'status':'error'}"
