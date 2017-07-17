@@ -1,0 +1,19 @@
+<?php
+/**
+ * @file
+ * Charts module integration with Highcharts library.
+ */
+
+/**
+ * Implements hook_charts_info().
+ */
+function charts_highcharts_charts_info() {
+  $info['highcharts'] = [
+    'label' => t('Highcharts'),
+    'render' => '_charts_highcharts_render',
+    'types' => ['area', 'bar', 'column', 'line', 'pie', 'scatter'],
+    'file' => 'charts_highcharts.inc',
+  ];
+
+  return $info;
+}

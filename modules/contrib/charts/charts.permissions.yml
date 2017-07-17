@@ -1,0 +1,5 @@
+# In charts.permissions.yml file.
+access all charts:
+  title: 'Administer Charts'
+  description: 'This permission needs to be fleshed out.'
+  restrict access: TRUE

@@ -1,0 +1,35 @@
+{
+  "name": "charts_highcharts",
+  "version": "0.0.1",
+  "require": {
+    "highcharts": "*"
+  },
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "highcharts",
+        "version": "5.0.7",
+        "type": "highcharts",
+        "dist": {
+          "url": "https://code.highcharts.com/highcharts.js",
+          "type": "file"
+        }
+      }
+    }
+  ],
+  "extra": {
+    "assets": {
+      "actions": [
+        {
+          "type": "copy",
+          "target": "js",
+          "pattern": "\\.js$"
+        }
+      ],
+      "packages": {
+        "highcharts": "*"
+      }
+    }
+  }
+}

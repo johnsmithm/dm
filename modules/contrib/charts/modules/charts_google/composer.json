@@ -1,0 +1,35 @@
+{
+  "name": "charts_google",
+  "version": "0.0.1",
+  "require": {
+    "google": "*"
+  },
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "google",
+        "version": "45",
+        "type": "google",
+        "dist": {
+          "url": "https://www.gstatic.com/charts/loader.js",
+          "type": "file"
+        }
+      }
+    }
+  ],
+  "extra": {
+    "assets": {
+      "actions": [
+        {
+          "type": "copy",
+          "target": "js",
+          "pattern": "\\.js$"
+        }
+      ],
+      "packages": {
+        "google": "*"
+      }
+    }
+  }
+}

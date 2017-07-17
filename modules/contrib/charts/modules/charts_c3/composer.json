@@ -1,0 +1,56 @@
+{
+  "name": "charts_cthree",
+  "version": "0.0.1",
+  "require": {
+    "dthree": "*",
+    "cthree": "*",
+    "cthree/css": "*"
+  },
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "dthree",
+        "version": "3",
+        "type": "dthree",
+        "dist": {
+          "url": "https://d3js.org/d3.v3.min.js",
+          "type": "file"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "cthree",
+        "version": "0.4.11",
+        "type": "cthree",
+        "dist": {
+          "url": "https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js",
+          "type": "file"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "cthree/css",
+        "version": "0.4.11",
+        "type": "css",
+        "dist": {
+          "url": "https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css",
+          "type": "file"
+        }
+      }
+    }
+  ],
+  "extra": {
+    "assets": {
+      "packages": {
+        "dthree": "*",
+        "cthree": "*",
+        "cthree/css": "*"
+      }
+    }
+  }
+}

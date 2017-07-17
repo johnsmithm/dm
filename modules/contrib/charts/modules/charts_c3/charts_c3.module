@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Charts module integration with C3 library.
+ */
+
+/**
+ * Implements hook_charts_info().
+ */
+function charts_c3_charts_info() {
+  $info['c3'] = [
+    'label' => t('C3 Charts'),
+    'types' => ['area', 'bar', 'column', 'line', 'pie', 'scatter'],
+  ];
+  return $info;
+}

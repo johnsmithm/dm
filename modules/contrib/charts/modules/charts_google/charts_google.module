@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Charts module integration with Google Charts library.
+ */
+
+use Drupal\charts_google\Settings\Google\GoogleOptions;
+use Drupal\charts_google\Settings\Google\ChartType;
+use Drupal\charts_google\Settings\Google\ChartArea;
+
+/**
+ * Implements hook_charts_info().
+ */
+function charts_google_charts_info() {
+  $info['google'] = [
+    'label' => t('Google Charts'),
+    'render' => '_charts_google_render',
+    'types' => ['area', 'bar', 'column', 'line', 'pie', 'scatter'],
+    'file' => 'charts_google.inc',
+  ];
+  return $info;
+}
+
+

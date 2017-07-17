@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Contains charts_api_example.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\charts\Charts\ModuleSelector;
+
+/**
+ * Implements hook_help().
+ */
+function charts_api_example_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the charts_api_example module.
+    case 'help.page.charts_api_example':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('A simple example on how to interact with the Charts Api') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function charts_api_example_theme() {
+  $vars = [
+    'library' => '',
+    'categories' => '',
+    'seriesData' => '',
+    'options' => '',
+  ];
+  return [
+    'charts_api_example' => [
+      'template' => 'charts_api_example',
+      'variables' => $vars,
+    ],
+  ];
+}
+
+/**
+ * Implements template_preprocess_page
+ *
+ * @param $variables
+ */
+function template_preprocess_charts_api_example(&$variables) {
+  $moduleSelector = new ModuleSelector($variables['library'], $variables['categories'], $variables['seriesData'], $variables['options'], [], $variables, 'xyz');
+}

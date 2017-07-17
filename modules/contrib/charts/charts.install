@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * Install and update functions for the Charts module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function charts_requirements($phase) {
+  $requirements = [];
+
+  return $requirements;
+}

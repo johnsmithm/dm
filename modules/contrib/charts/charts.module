@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file
+ * Charts module file that provides hook_theme.
+ */
+
+use Drupal\charts\Util\Util;
+use Drupal\charts\Charts\ModuleSelector;
+
+/**
+ * {@inheritdoc}
+ */
+function charts_theme($existing, $type, $theme, $path) {
+
+  return [
+    'views_view_charts' => [
+      'variables' => [
+        'view' => NULL,
+        'row' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * {@inheritdoc}
+ */
+function template_preprocess_views_view_charts(&$variables) {
+
+  $options = $variables['view']->style_plugin->options;
+  $attachmentDisplayOptions = [];
+
+  $service = \Drupal::service('charts.charts_attachment');
+  $attachmentView = $service->getAttachmentViews();
+
+  $view = $variables['view'];
+  $viewId = $view->id();
+  $displayId = $view->display_handler->display['id'];
+  $chartId = $viewId . '__' . $displayId;
+  $categoriesAttachment = [];
+  $seriesDataAttachment = [];
+  $attachmentChartTypeOption = [];
+
+  for ($i = 0; $i < count($attachmentView); $i++) {
+
+    $attachmentId = $attachmentView[$i]->display_handler->display['id'];
+
+    $attachmentDisplay = $view->storage->getDisplay($attachmentId);
+    $attachmentChartType = $attachmentDisplay['display_options']['style']['options']['type'];
+    array_push($attachmentChartTypeOption, $attachmentChartType);
+    $attachedValueField = $attachmentDisplay['display_options']['style']['options']['data_fields'];
+
+    $combinedAttachmentPage = Util::removeUnselectedFields($attachedValueField);
+    $attachmentColor = $attachmentView[$i]->style_plugin->options['field_colors'];
+    $labelField = $attachmentView[$i]->style_plugin->options['label_field'];
+    $dataAttachment = Util::viewsData($attachmentView[$i], $combinedAttachmentPage, $labelField, $attachmentColor, $attachmentChartTypeOption[$i]);
+    $dataAttachmentFormatted = Util::createChartableData($dataAttachment);
+    for ($j = 0; $j < count($dataAttachmentFormatted[0]); $j++) {
+      array_push($categoriesAttachment, $dataAttachmentFormatted[0][$j]);
+    }
+
+    for ($j = 0; $j < count($dataAttachmentFormatted[1]); $j++) {
+      array_push($seriesDataAttachment, $dataAttachmentFormatted[1][$j]);
+    }
+  }
+  $library = $view->style_plugin->options['library'];
+  $variables['data'] = [];
+  $labelField = $view->style_plugin->options['label_field'];
+  $valueField = $view->style_plugin->options['data_fields'];
+  $valueField = Util::removeUnselectedFields($valueField);
+  $color = $view->style_plugin->options['field_colors'];
+
+  if (0 < count($attachmentView)) {
+    $data = Util::viewsData($view, $valueField, $labelField, $color, $attachmentChartTypeOption[$i]);
+  } else {
+    $data = Util::viewsData($view, $valueField, $labelField, $color, $attachmentChartTypeOption[$i] = NULL);
+  }
+
+  $data = Util::createChartableData($data);
+  $categories = $data[0];
+  $seriesData = $data[1];
+  $categories = array_merge($categories, $categoriesAttachment);
+  $categories = array_unique($categories);
+
+  for ($i = 0; $i < count($attachmentView); $i++) {
+    $attachmentId = $attachmentView[$i]->display_handler->display['id'];
+    $attachmentDisplay = $view->storage->getDisplay($attachmentId);
+    $attachmentDisplayOptions[$i] = $attachmentDisplay['display_options'];
+  }
+  $seriesData = array_merge($seriesData, $seriesDataAttachment);
+  $moduleSelector = new ModuleSelector($library, $categories, $seriesData, $options, $attachmentDisplayOptions, $variables, $chartId);
+
+}
