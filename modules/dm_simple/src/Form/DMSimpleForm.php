@@ -39,6 +39,7 @@ class DMSimpleForm extends FormBase {
       //'#default_value' => $this->get('photo'),
       '#upload_location' => 'public://images/',
       '#required' => TRUE,
+      '#file_validate_size' => array(4 * 1024 * 1024),
       '#theme'    =>    'advphoto_thumb_upload',
     );
 
@@ -102,7 +103,7 @@ class DMSimpleForm extends FormBase {
    *   Object describing the current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    dsm($form_state->getValue('photo'));
+    #dsm($form_state->getValue('photo'));
     $_SESSION['dm_simple_FID'] = $form_state->getValue('photo')[0];
   }
 

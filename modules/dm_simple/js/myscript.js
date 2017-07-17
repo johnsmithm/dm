@@ -596,8 +596,7 @@
 			        		this.initY+410*i,
 			        		args.path_i[i*3+j],
 			        		this.layerI, this);
-				    }
-	        	
+				    }	        	
 	        }
 		    this.logic = function() {
 		    	$('#downloadExcel').hide();
@@ -610,7 +609,7 @@
 		        	this.stage.add(this.layerL);
 		        	this.stage.add(this.layerB);
 		    	}else if(this.type == 'lines'){
-		    		//$('#database').show();
+		    		//$('#database').show();//for live hide!
 		    		this.addLines();
 		        	this.stage.add(this.layerI);
 		        	this.stage.add(this.layerL);
@@ -687,38 +686,49 @@
 		function helpVideos(){
 			var id = 'GsmKcBH2rJY';
 			var title = "Fereastra de ajutor";
+			if(argsP.lang=='en')
+				title = 'Help';
 			var body = $("<div>");
 			
 			if(argsP.type=='square'){
 				id = 'tBDqxf7lrbg';
-				body.append($("<p>").append("Misca patratele cu mausul pentru "+
-				"a delimita pagina sau tabelul, daca ai delimitat tabelul "+
-				"indica in select box 'Find lines' pentru a gasi liniile tabelului."+
-				" In fereastra ce apare indica numarul de linii si coloane a "+
-				"tabelului. Daca nu doresti sa clasifici toate celulele indica "+
-				" numarul de linii ce delimiteaza celulele pentru clasificare."+
-				" Pentru a folosi tastatura pentru a misca patratele apasa/misca cu "+
-				"mausul patratul dorit, apoi foloseste tastele A,S,W,D pentru a "+
-				"pozitiona patratul in colturile paginii/tabelului."));
-				body.append($("<p>").append("Pentru a mari imaginea foloseste "+
-					"sliderul de langa cuvantul 'Zoom'. "));
-				body.append($("<p>").append(" Apasa pe butonul 'Next' pentru a"+
-					" redimensiona imaginea la dimensiunea tabelului sau paginii. "));
+				if(argsP.lang=='en'){
+					body.append('<p>Move the squares in order to match the page'+
+						' or table. Keys a,s,w,d can be used too. Click Next!</p>');
+				}else{
+					body.append($("<p>").append("Misca patratele cu mausul pentru "+
+					"a delimita pagina sau tabelul, daca ai delimitat tabelul "+
+					"indica in select box 'Find lines' pentru a gasi liniile tabelului."+
+					" In fereastra ce apare indica numarul de linii si coloane a "+
+					"tabelului. Daca nu doresti sa clasifici toate celulele indica "+
+					" numarul de linii ce delimiteaza celulele pentru clasificare."+
+					" Pentru a folosi tastatura pentru a misca patratele apasa/misca cu "+
+					"mausul patratul dorit, apoi foloseste tastele A,S,W,D pentru a "+
+					"pozitiona patratul in colturile paginii/tabelului."));
+					body.append($("<p>").append("Pentru a mari imaginea foloseste "+
+						"sliderul de langa cuvantul 'Zoom'. "));
+					body.append($("<p>").append(" Apasa pe butonul 'Next' pentru a"+
+						" redimensiona imaginea la dimensiunea tabelului sau paginii. "));
+				}
 			}
 
 			if(argsP.type=='lines' ){
 				id = '8jSGCwDffQk';
 				if( $('#selectDMS').val()=='2'){
 					id = 'FruSRtPaniA';
-					body.append($("<p>").append(" Pentru a pozitiona liniile la "+
-						"aceeasi distanta intre ele misca o linie in pozitia corecta."+
-						" In fereastra care apare scrie ce distanta in pixeli trebuie "+
-						" sa fie pana la urmatoarea linie(sus in jos, stanga la dreapta). "+
-						"Initial in fereastra este indicata distanta curenta. Dupa ce apasati "+
-						"pe butonul ok, apare o fereastra cu un slider. Cu acel slider se "+
-						" seteaza distanta dintre toate liniile de dupa linia miscata. "+
-						"Dupa ce ati apasat pe slider puteri folosi si sagetile pentru a "+
-						"seta distanta dintre linii."));
+					if(argsP.lang=='en'){
+						body.append('<p>Move the lines to match the table!</p>');
+					}else{
+						body.append($("<p>").append(" Pentru a pozitiona liniile la "+
+							"aceeasi distanta intre ele misca o linie in pozitia corecta."+
+							" In fereastra care apare scrie ce distanta in pixeli trebuie "+
+							" sa fie pana la urmatoarea linie(sus in jos, stanga la dreapta). "+
+							"Initial in fereastra este indicata distanta curenta. Dupa ce apasati "+
+							"pe butonul ok, apare o fereastra cu un slider. Cu acel slider se "+
+							" seteaza distanta dintre toate liniile de dupa linia miscata. "+
+							"Dupa ce ati apasat pe slider puteri folosi si sagetile pentru a "+
+							"seta distanta dintre linii."));
+					}
 				}else{
 					body.append($("<p>").append("Misca liniile cu ajutorul mausului "+
 					"pana cand ajung la pozitia dorita. Daca tabelul nu este "+
@@ -741,8 +751,13 @@
 					" este posibil de Descarcat tabelul in format Electronic sau de "+
 					"intors la pasul precedent folosind butonul 'Back'"))
 			}
-			body.append(' Daca nu doresti sa vezi aceste mesaje ajutatoare '+
-				"debifeaza checkboxul 'Help'");
+			if(argsP.lang=='en'){
+				body.append('<p style="color:red">Click the checkbox in order to disable'+
+					' the help dialog</p>')
+			}
+			else
+				body.append('<p style="color:red">Daca nu doresti sa vezi aceste mesaje ajutatoare '+
+					"debifeaza checkboxul 'Help'</p>");
 			//todo: add text with images also
 			$('#dialog').html('<iframe id="playerID" width="420" height="315"'+
 			'src="https://www.youtube.com/embed/'+id+'?autoplay=1">'+

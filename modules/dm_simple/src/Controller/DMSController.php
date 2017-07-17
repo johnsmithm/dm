@@ -34,10 +34,15 @@ class DMSController extends ControllerBase {
    *   If the parameters are invalid.
    */
   public function simple() {
-    $current_user = \Drupal::currentUser();
+    $current_user = \Drupal::currentUser();//getName
+    $language =  \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $textL = ['photo'=>['ro'=>'Pentru a incarca propriile fotografii inregistrativa!',
+    'en'=>'In order to upload your own photos you need to log in!']
+    ,'limits'=>['en'=>'3 requests limits for un non-authenticated users!',
+    'ro'=>'Sunt permise 3 incercari pentru o zi pentru utilizatorii neinregistrati!']];
     #dsm($current_user);
     $notAut = !isset($_REQUEST['imgs']) && ($current_user->id()!=0);
-    dsm($notAut);
+    #dsm($language);
   	if ($notAut && (!isset($_SESSION['dm_simple_FID']) || $_SESSION['dm_simple_FID']==0 ||
       !file_load($_SESSION['dm_simple_FID']))){
   		return \Drupal::formBuilder()->getForm('Drupal\dm_simple\Form\DMSimpleForm');
@@ -46,7 +51,7 @@ class DMSController extends ControllerBase {
       $_SESSION['dm_simple_TIMES'] = 0;
     if($_SESSION['dm_simple_TIMES']>3 && $current_user->id()==0)
     return ['content'=>['#markup'=>
-    '<p>Sunt permise 3 incercari pentru o zi pentru utilizatorii neinregistrati!</p>']];
+    "<p>".$textL['limits'][$language]."</p>"]];
     #$result = self::make_post_request(['action'=>'433']);
     #dsm($result);
     if(!$notAut and False){
@@ -94,7 +99,7 @@ class DMSController extends ControllerBase {
     // find it using jQuery.
     $build['content'] = array(
       '#markup' => '
-       <h5>Pentru a incarca propriile fotografii inregistrativa!</h5>
+       <h5>'.$textL['photo'][$language].'</h5>
       <div id="buttons">
        
       </div>
@@ -143,6 +148,7 @@ class DMSController extends ControllerBase {
       //dsm($value->toArray()['title'][0]['value']);
       //break;
     }
+    $result['lang'] = $language;
     $build['#attached']['drupalSettings']['dm_simple']['dm_simple'] = $result;
     
     $build['#cache']['max-age'] = 0;
@@ -342,18 +348,26 @@ class DMSController extends ControllerBase {
    *   If the parameters are invalid.
    */
   function dm_sequence(){
+    $language =  \Drupal::languageManager()->getCurrentLanguage()->getId();
+     $textL = ['photo'=>['ro'=>'Pentru a incarca propriile fotografii inregistrativa!',
+    'en'=>'In order to upload your own photos you need to log in!'],
+    'credits'=>['en'=>'IAM dataset was used!',
+    'ro'=>'Pentru antrenarea modelului a fost folosit setul de imagini IAM'],
+    'limits'=>['en'=>'3 requests limits for un non-authenticated users!',
+    'ro'=>'Sunt permise 3 incercari pentru o zi pentru utilizatorii neinregistrati!']];
+   
     $current_user = \Drupal::currentUser();
     if(!isset($_SESSION['dm_simple_TIMES']))
       $_SESSION['dm_simple_TIMES'] = 0;
     if($_SESSION['dm_simple_TIMES']>3 && $current_user->id()==0)
       return ['content'=>['#markup'=>
-    '<p>Sunt permise 3 incercari pentru o zi pentru utilizatorii neinregistrati!</p>']];
+    '<p>'.$textL['limits'][$language].'</p>']];
    
     $build = array();
 
     #dsm($current_user);
     $notAut = !isset($_REQUEST['imgs']) && ($current_user->id()!=0);
-    dsm($notAut);
+    #dsm($notAut);
     if ($notAut && (!isset($_SESSION['dm_simple_FID']) || $_SESSION['dm_simple_FID']==0 ||
       !file_load($_SESSION['dm_simple_FID']))){
       return \Drupal::formBuilder()->getForm('Drupal\dm_simple\Form\DMSimpleForm');
@@ -364,12 +378,13 @@ class DMSController extends ControllerBase {
 
     $build['content'] = array(
       '#markup' => '
-      <h5>Pentru a incarca propriile fotografii inregistrativa!</h5>
+      <h5>'.$textL['photo'][$language].'</h5>
       <div id="buttons">
       </div>
       <div  id="container"></div>
       
       <div id="dialog" style="height:300px;overflow: scroll;" title="Basic dialog"></div>
+      <p>'.$textL['credits'][$language].'</p>
       <div class="modal"><!-- Place at bottom of page --></div>
       ',
     );
