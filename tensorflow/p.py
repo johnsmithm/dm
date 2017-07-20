@@ -122,8 +122,9 @@ def getServerInfo():
 		print(x,y,w,h)
 		image = image[y:y+h,x:x+w]
 		cv2.imwrite('modules/dm_simple/imgs/test.png',image)
-		print(image.shape)
-		soft, d, t = load_predict((255.-np.array([image]))/255.)
+		print(image.shape);nnModel = request.form['nnModel']
+		soft, d, t = load_predict((255.-np.array([image]))/255.,
+            path="modules/dm_simple/imgs/mblstm-width-free-{}.ckpt".format(nnModel))
 		print(d[0][0])
 		pathData = 'modules/dm_simple/imgs/'
 		vocab_info = json.loads(scipy.io.loadmat(pathData+'info.mat')['vocab'][0])
@@ -163,7 +164,8 @@ def getServerInfo():
         pathData = 'modules/dm_simple/imgs/'
         vocab_info = json.loads(scipy.io.loadmat(pathData+'info.mat')['vocab'][0])
         back = {c:s for s,c in vocab_info.items()}
-        d, t = load_predict((np.array(out['cellsCN']))/255.,batch_size=5)         
+        d, t = load_predict((np.array(out['cellsCN']))/255.,
+            path="modules/dm_simple/imgs/mblstm-width-free-4.ckpt",batch_size=5)         
         out['time'] = t
         for i,p in enumerate(d):
             print(p)

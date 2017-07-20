@@ -139,6 +139,9 @@
 		stage.add(layerL);
 		stage.add(layerB);
 
+		$('#buttons').append('<select id="nnModel"><option value="3">'+
+			'AIM Tensorflow Model</option>'+
+			'<option value="4">AIM Tensorflow Model with Noise</option>'+'</select>');
 		$('#buttons').append('<input type="button" id="resetDMS" value="Reset">'); 
       	$('#buttons').append('<input type="button" id="next" value="Next">'); 
       	//$('#resetDMS').hide()
@@ -169,6 +172,8 @@
 	                });
 	        imgK.width((maxx-minx));
 	        imgK.height((maxy-miny));
+	        var nnModel = $('#nnModel').val();
+	        console.log(nnModel);
 	        layerB.hide()
 	        layerL.hide()
       		layerI.draw()
@@ -176,6 +181,7 @@
       		$('#resetDMS').show()
       		console.log(parseInt((maxx-minx-0)*(realw/myw)));
       		$.post(urlS, {'action':'sequence',
+      			'nnModel':nnModel,
       			'x':parseInt((minx-20)*(realw/myw)),
       			'y':parseInt((miny-20)*(realh/myh)),
 				'height':parseInt((maxy-miny-0)*(realh/myh)),
