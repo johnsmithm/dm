@@ -4,6 +4,13 @@
  * @file
  * Examples demonstrating how to implement and invoke hooks.
  */
+use \Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use \Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use \Drupal\Core\Entity\EntityInterface;
+use \Drupal\Core\Form\FormStateInterface;
+use \Drupal\node\NodeInterface;
+use \Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_cron().
@@ -19,4 +26,33 @@ function dm_simple_cron() {
 		exec("rm sites/default/files/tensorflow/page-*.jpg");
 		exec('rm sites/default/files/tensorflow/table-*.jpg');
 	}
+}
+
+function dm_simple_node_presave(EntityInterface $node) {
+  #dsm('process now');
+  if ($node->bundle()=='tensorflow_wizard') {
+   	  #dsm('process now');
+   	if($node->get('field_process')->getValue()[0]['value'] &&
+   		count($node->get('field_input_image')->getValue())>0 && $node->id()){
+   		#dsm('process now');
+   		$fid = $node->get('field_input_image')->getValue()[0]['target_id'];
+   		$output = 'tensorflow output json';
+   		$node->set("body", $output);
+   		#$node->save();
+      //todo: save then redirect!!!
+   		$path = '/dm_simple';
+   		$_SESSION['dm_simple_nid'] = $node->id();
+
+   		$nrF = count($node->get('field_input_image')->getValue());
+	    $fid = $node->get('field_input_image')->getValue()[$nrF-1]['target_id'];
+	    
+   		$_SESSION['dm_simple_FID'] = $fid;
+
+   		//get the path to file
+   		$response = new RedirectResponse($path, 302);
+  		$response->send();
+   	}
+   	#$	
+	#dsm($node->toArray());
+  }
 }

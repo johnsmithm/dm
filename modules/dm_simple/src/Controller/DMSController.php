@@ -327,12 +327,29 @@ class DMSController extends ControllerBase {
       $result['poi'] = $command;
     }else if($_REQUEST['action'] == 'reset'){
       $_SESSION['dm_simple_FID'] = 0;
+      $_SESSION['dm_simple_nid'] = 0;
     }else if($_REQUEST['action'] == 'count'){
       $_SESSION['dm_simple_TIMES'] += 1;
       $current_user = \Drupal::currentUser();
       $result['count'] = 0;
       if($_SESSION['dm_simple_TIMES']>3 && $current_user->id()==0)
         $result['count'] = 1;
+    }else if($_REQUEST['action'] == 'save' && isset($_SESSION['dm_simple_nid'])
+      && $_SESSION['dm_simple_nid'] != 0){
+      #get the last prediction
+      $rows = explode('"',$_REQUEST['st']);
+      foreach ($rows as $key => $value) {
+         $values = explode(',', $value);
+         foreach ($values as $key1 => $value1) {
+           if($value1 != 12){
+            //save the node, check for the names, make users if needed
+            
+            $result[] = $value1;
+           }
+         }
+       }
+
+      $_SESSION['dm_simple_nid'] = 0;
     }
     return new JsonResponse($result);
   }
@@ -407,6 +424,7 @@ class DMSController extends ControllerBase {
       //dsm($url);
       $result['path'] = '/'.$url;//file_create_url($file->getFileUri());
     }
+    $result['lang'] = $language;
     $build['#attached']['drupalSettings']['dm_sequence']['dm_sequence'] = $result;
     return $build;
   }

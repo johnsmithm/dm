@@ -16,6 +16,7 @@ dm_simple.test:
     - core/jquery.ui.sortable
     - core/jquery.ui.slider
     - core/jquery.ui.dialog
+    - core/jquery.ui.autocomplete
   #dependencies:
    # - core/jquery
     #- core/drupalSettings

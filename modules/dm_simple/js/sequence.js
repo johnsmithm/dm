@@ -160,7 +160,10 @@
       		}
       		if((maxx-minx-0)*(realw/myw) > 900 ||
       			(maxy-miny+0)*(realh/myh) > 200){
-      			alert('Selectati doar un rand si nu mai mult de 3 cuvinte(200x900)!');
+      			if (argsP.lang == 'ro')
+      				alert('Selectati doar un rand si nu mai mult de 3 cuvinte(200x900)!');
+      			else
+      				alert('select windows with shape (200X900)!')
       			return;
       		}
       		console.log(maxx,maxy,minx,miny);

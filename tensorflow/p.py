@@ -8,6 +8,7 @@ import run
 import scipy.io
 import cv2
 import json
+import eval_util
 app = Flask(__name__)
 app.secret_key = 'any random string'
 CORS(app)
@@ -53,6 +54,19 @@ def getModel1(path):
     return predict
 
 #predict1 = 1#getModel1('modules/dm_simple/imgs/mblstm-width-free-2.ckpt')
+pathData = 'modules/dm_simple/imgs/'
+file = open(pathData+"nume.txt","r") 
+n = file.read().split('\n')
+file = open(pathData+"prenume.txt","r") 
+p = file.read().split('\n')
+lines = []
+vocab_info = json.loads(scipy.io.loadmat(pathData+'info.mat')['vocab'][0])
+for c in n:
+    lines.append([vocab_info[v] for v in c if v in vocab_info])
+for c in p:
+    lines.append([vocab_info[v] for v in c if v in vocab_info])
+#print(lines[0])
+trie = eval_util.get_trie(lines)
 
 def load_predict(imgs, path='modules/dm_simple/imgs/mblstm-width-free-3.ckpt',
     batch_size=1):
@@ -71,7 +85,7 @@ def load_predict(imgs, path='modules/dm_simple/imgs/mblstm-width-free-3.ckpt',
         is_training_tensor = loaded_Graph.get_tensor_by_name('is_training:0')
         
         decoded_tensor=[]
-        for i in range(1):
+        for i in range(10):
             decoded_tensor.append(tf.get_collection("decodedPrediction{}".format(i)))
         logits_tensor = tf.get_collection('logits_softmax')[0]
         #cost_tensor = tf.get_collection('cost')[0]
@@ -93,11 +107,9 @@ def load_predict(imgs, path='modules/dm_simple/imgs/mblstm-width-free-3.ckpt',
                 lens_tensor:imgs[0].shape[1],
                 hei_tensor:imgs[0].shape[0],
                 is_training_tensor:False}
-            d = sess.run(decoded_tensor[0], feed_t)
-            print(len(d))
-            for p in d[0]:
-                print(p.shape)
-                probs.append(p)
+            d = sess.run([decoded_tensor], feed_t)
+            
+            probs.append(d)
         end=time.time()
         return probs, (end-start)
 
@@ -164,13 +176,22 @@ def getServerInfo():
         pathData = 'modules/dm_simple/imgs/'
         vocab_info = json.loads(scipy.io.loadmat(pathData+'info.mat')['vocab'][0])
         back = {c:s for s,c in vocab_info.items()}
-        d, t = load_predict((np.array(out['cellsCN']))/255.,
-            path="modules/dm_simple/imgs/mblstm-width-free-4.ckpt",batch_size=5)         
+        iim = np.array(out['cellsCN'])
+        d, t = load_predict( iim/(0.0+np.amax(iim)-np.amin(iim)),
+            path="modules/dm_simple/imgs/mblstm-width-free-5.ckpt",batch_size=5)
+        prs = []
+        for d1 in d:  
+            pr = eval_util.sort_prediction(d1,lines,
+             lambda x: eval_util.trie_exist(trie,x), 
+             eval_util.levenshtein, 
+             ch=vocab_info)      
+            prs.extend(pr)
         out['time'] = t
-        for i,p in enumerate(d):
+        for i,p in enumerate(prs):
             print(p)
-            text = ''.join([str(back[c]) for c in p])
-            out['predictions'][i]['cells'][out['colmnN']]['prediction'] = text
+            #text = ''.join([str(back[c]) for c in p])
+            out['predictions'][i]['cells'][out['colmnN']]['prediction'] = p[0]
+            out['predictions'][i]['cells'][out['colmnN']]['options'] = p
             out['predictions'][i]['cells'][out['colmnN']]['probability'] = 0.7
         del out['cellsCN']
         out['cellsCN'] = []

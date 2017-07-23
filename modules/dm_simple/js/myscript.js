@@ -352,8 +352,14 @@
 
 		                  $('#textboxes').show();//add reference to cell
 		                  //add click function to change prediction
-		                  $('#textboxes input').val(cell.prediction).css({'left':xx+'px',
-		              		'top':yy+'px'}).focus();
+		                  var availableTags = ['3','3mm','ama'];
+		                  $('#textboxes input').val(cell.prediction)
+		                  .css({'left':(xx+28)+'px',
+		              		'top':(yy+66)+'px'}).focus();
+		                  $('#textboxes input').autocomplete({
+										      source: cell.options,
+										      select: function( event, ui ) { console.log(4);}
+										    });
 		               }else
 		               		customCorrector();
 	              });
@@ -636,11 +642,12 @@
       	$('#buttons').append('<input type="button" id="nextStage" value="Next">'); 
       	$('#buttons').append('<input type="button" id="downloadExcel" value="Download">'); 
       	$('#buttons').append('<input type="button" id="database" value="Json">');
+      	$('#buttons').append('<input type="button" id="dmSave" value="Save">');      	
       	$('#buttons').append('Help<input type="checkbox" id="helpDMS">');
       	$('#buttons').append('<div style="width:200px;" id="zoomslider"></div>Zoom');
 
       	$('#textboxes').append('<input type="text" name="editNames">');
-      	$('#database').hide();
+      	$('#database,#dmSave').hide();
 
       	$( "#zoomslider" ).slider({range: "max",
                   min: 1,
@@ -969,7 +976,7 @@
 				            argsP.offsetx[0] = parseInt($('#mds_col').val());
 				            argsP.offsety[0] = parseInt($('#mds_row').val());
 				            argsP.colmnN = $('#mds_name').val();
-				            if(true){//for live
+				            if(true && argsP.offsety[1]>10){//for live
 				            	argsP.colmnN  = '';
 				            }
 				            localStorage['dm_simple_colmnN'] = argsP.colmnN;
@@ -997,7 +1004,7 @@
 						                if(result1['ans']==1){
 						                	argsP.type = 'pred';
 							                stage = new Stage(argsP);
-					                		stage.logic();
+					                		stage.logic();//,#dmSave
 					                		$('#downloadExcel').show();
 							                $("#nextStage").attr("disabled", false);
 							                if($('#helpDMS').prop('checked'))
@@ -1027,6 +1034,30 @@
 				$('#mds_row').val(localStorage['dm_simple_offsety0']||'0');
 				$('#mds_rows').val(localStorage['dm_simple_offsety1']||argsP.hLines.length-1);
 			}
+		})
+		$('#dmSave').click(function(){
+			var st = '';
+	        for(var i in argsP.predictions){
+	            if(argsP.offsety.length>0 &&(
+	             argsP.offsety[0]>i || argsP.offsety[0]+argsP.offsety[1]<=i))
+	              continue;
+	            if(i!=argsP.offsety[0])
+	              st+="|";
+	            for(var j in argsP.predictions[i]['cells']){
+	              if(argsP.offsety.length>0 &&(
+	             argsP.offsetx[0]>j || argsP.offsetx[0]+argsP.offsetx[1]<=j))
+	              continue;
+	              if(j != argsP.offsetx[0])
+	                st+=',';
+	              var tt = argsP.predictions[i]['cells'][j]['prediction'];
+	              st+=tt;
+	            }
+	        }
+	        console.log(st);
+	        $.post("/dm_simple/ajax", {'action':'save','st':st}, 
+		            	function(result){
+			                console.log(result);
+			            });	
 		})
 		$("#downloadExcel").click(function(){        
         var st = '';

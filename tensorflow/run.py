@@ -362,6 +362,8 @@ def getCells(page,rowDots,collDots, out, debug=False):
             cells.append(cellI)
             if j == out['colmnN']:
                 gray = cv2.cvtColor(cellI, cv2.COLOR_BGR2GRAY)
+                gray = np.amax(gray) - gray
+                print('gray shape', np.amax(gray),np.amin(gray))
                 gray = np.insert(gray, [gray.shape[0]]*(maxH-gray.shape[0]), 0., axis=0)
                 if i==2:
                     cv2.imwrite('modules/dm_simple/imgs/test.png',gray)
