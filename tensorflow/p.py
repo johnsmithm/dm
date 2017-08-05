@@ -97,6 +97,8 @@ def load_predict(imgs, path='modules/dm_simple/imgs/mblstm-width-free-3.ckpt',
                 is_training_tensor:False}
             softmax, d = sess.run([logits_tensor, decoded_tensor[0]], feed_t)
             end=time.time()
+            sess.close()
+            del sess
             return softmax, d, (end-start)
         probs = []
         for i in range(0,len(imgs),batch_size):
@@ -111,6 +113,9 @@ def load_predict(imgs, path='modules/dm_simple/imgs/mblstm-width-free-3.ckpt',
             
             probs.append(d)
         end=time.time()
+        sess.close()
+        del sess
+        #tf.reset_default_graph()
         return probs, (end-start)
 
 @app.route('/server', methods = ['POST','OPTIONS'])

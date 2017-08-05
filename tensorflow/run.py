@@ -255,7 +255,11 @@ def tf_cnn_slim_model13(imgs,batchSize=100,
     testData = np.array(testData)
     
     loaded_Graph = tf.Graph()
-    with tf.Session(graph=loaded_Graph) as sess:
+    session_config = tf.ConfigProto(log_device_placement=False, 
+        allow_soft_placement=True)    
+    sess = tf.Session(graph=loaded_Graph,config=session_config)
+    with tf.Session(graph=loaded_Graph,config=session_config) as sess:
+    #with tf.Graph().as_default(),sess:
         loader = tf.train.import_meta_graph(pathGraph)
         loader.restore(sess, pathVars.split('.index')[0])    
         # get tensors
@@ -272,7 +276,13 @@ def tf_cnn_slim_model13(imgs,batchSize=100,
                 feed_dict = {loaded_x: testData[i:i+batchSize],is_training:False,
                 keep_pr:1.0})
             probs[i:i+batchSize,0] = np.argmax(prob,1)
-            probs[i:i+batchSize,1] = np.amax(prob,1)        
+            probs[i:i+batchSize,1] = np.amax(prob,1)
+            del prob     
+        sess.close()
+        del sess
+    #tf.reset_default_graph()
+    del testData
+    del loaded_Graph   
     return probs
 
 def getModel(pathGraph, pathVars):
@@ -335,8 +345,7 @@ def tf_cnn_slim_model(imgs,batchSize=100,
     return probs
 
 
-predictFast = getModel('sites/default/files/metagraph-2017-05/checkpoint-750.meta', 
-    'sites/default/files/2017-05/checkpoint-750.index')
+
 
 def getCells(page,rowDots,collDots, out, debug=False):    
     """get cell from table image
@@ -371,7 +380,19 @@ def getCells(page,rowDots,collDots, out, debug=False):
                 cellsCN.append(gray)
     #rand_model, null_model, tf_cnn_slim_model
     #print(len(cells))
-    probs = predictFast(cells)# tf_cnn_slim_model13(cells,pathGraph=out['pathGraph'],pathVars=out['pathVars'])
+    
+    #predictFast = getModel('sites/default/files/metagraph-2017-05/checkpoint-750.meta', 
+    #'sites/default/files/2017-05/checkpoint-750.index')
+
+    #probs = predictFast(cells)# 
+    #probs = tf_cnn_slim_model13(cells,pathGraph=out['pathGraph'],pathVars=out['pathVars'])
+    
+    #probs = tf_cnn_slim_model13(cells,
+    #    pathGraph='sites/default/files/metagraph-2017-05/checkpoint-750.meta',
+    #    pathVars='sites/default/files/2017-05/checkpoint-750.index')
+    del cells
+    probs = np.ones((900,2))
+    print(probs.shape)
     #print(len(probs))
 
     for i in range(len(rowDots)-1):
@@ -383,9 +404,12 @@ def getCells(page,rowDots,collDots, out, debug=False):
             cell = {'col':j,'x':collDots[j]*wR,'width':(collDots[j+1]-collDots[j])*wR,
             'prediction':prediction,'probability':probability}
             cellsR.append(cell)
+            del cell
         row = {'y':rowDots[i]*hR, 'height':(rowDots[i+1]-rowDots[i])*hR,
         'row':i,'cells':cellsR}
         out['predictions'].append(row)
+        del row
+    del probs
     out['cellsCN'] = cellsCN
     return out
 
@@ -658,6 +682,9 @@ def logic(args):
         out['pathVars'] = args.pathVars
         out['colmnN'] = int(args.colmnN)
         out = getCells(image,hLines,vLines,out)#each cell from each row
+        del image
+        del hLines
+        del vLines
         out['ans'] = 1        
         print(len(out['cellsCN']),'len cellsCN', out['colmnN'])
         #print (json.dumps(out))
