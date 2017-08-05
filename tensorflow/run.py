@@ -387,11 +387,11 @@ def getCells(page,rowDots,collDots, out, debug=False):
     #probs = predictFast(cells)# 
     #probs = tf_cnn_slim_model13(cells,pathGraph=out['pathGraph'],pathVars=out['pathVars'])
     
-    #probs = tf_cnn_slim_model13(cells,
-    #    pathGraph='sites/default/files/metagraph-2017-05/checkpoint-750.meta',
-    #    pathVars='sites/default/files/2017-05/checkpoint-750.index')
+    probs = tf_cnn_slim_model13(cells,
+        pathGraph='sites/default/files/metagraph-2017-05/checkpoint-750.meta',
+        pathVars='sites/default/files/2017-05/checkpoint-750.index')
     del cells
-    probs = np.ones((900,2))
+    #probs = np.ones((900,2))
     print(probs.shape)
     #print(len(probs))
 
