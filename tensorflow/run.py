@@ -344,6 +344,54 @@ def tf_cnn_slim_model(imgs,batchSize=100,
                 probs[i,0] = 12
     return probs
 
+def load_graph(frozen_graph_filename):
+    # We load the protobuf file from the disk and parse it to retrieve the 
+    # unserialized graph_def
+    with tf.gfile.GFile(frozen_graph_filename, "rb") as f:
+        graph_def = tf.GraphDef()
+        graph_def.ParseFromString(f.read())
+
+    # Then, we can use again a convenient built-in function to import a graph_def into the 
+    # current default Graph
+    with tf.Graph().as_default() as graph:
+        tf.import_graph_def(
+            graph_def, 
+            input_map=None, 
+            return_elements=None, 
+            name="prefix", 
+            op_dict=None, 
+            producer_op_list=None
+        )
+    return graph
+
+def chatbot(text, path):
+
+    output_graph = path + '/chatbot-context.pb'
+    tf.reset_default_graph()
+    loaded_Graph = load_graph(output_graph)
+    #laod vocab, classes and answers
+
+    obj = pickle.load( open( path+'/chatbot-data.p', "rb" ) )
+    classes = obj['classes']
+    vocab = obj['vocab']
+    answers = obj['answers']
+       
+    messages = loaded_Graph.get_tensor_by_name('prefix/messages:0')
+    lengths = loaded_Graph.get_tensor_by_name('prefix/lengths:0')
+    bs = loaded_Graph.get_tensor_by_name('prefix/batch_size:0')    
+            
+    probs = loaded_Graph.get_tensor_by_name('prefix/probabilities:0')
+    preds = loaded_Graph.get_tensor_by_name('prefix/prediction:0')
+
+    sess =  tf.Session(graph=loaded_Graph)   
+    q = text# 'what kind of modep do you have?'
+    m = [[vocab[c]] for c in q.lower() if c in vocab]
+    tePRO, tePRE = sess.run([probs,preds], 
+                    feed_dict = {messages:[m], lengths:[len(m)],bs:1})
+    sess.close()
+    return classes[tePRE[0]], tePRO[0][tePRE[0]],\
+     np.random.choice(answers[classes[tePRE[0]]])
+
 
 
 

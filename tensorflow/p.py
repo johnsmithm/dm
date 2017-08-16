@@ -120,6 +120,11 @@ def load_predict(imgs, path='modules/dm_simple/imgs/mblstm-width-free-3.ckpt',
 
 @app.route('/server', methods = ['POST','OPTIONS'])
 def getServerInfo():
+
+    if str(request.form['action']) == 'chatbot':
+        out = run.chatbot(request.form['message'], path="modules/dm_simple/imgs")
+        print(out)
+        return jsonify({'ans':out[-1],'prob':float(out[1])})
     if str(request.form['action']) == 'json':
         for data in request.form:
             print(data,request.form[data])
