@@ -428,4 +428,42 @@ class DMSController extends ControllerBase {
     $build['#attached']['drupalSettings']['dm_sequence']['dm_sequence'] = $result;
     return $build;
   }
+
+  /**
+   * Constructs a chatbot page.
+   *
+   * The router _controller callback, maps the path
+   * 'sequence' to this method.
+   *
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   If the parameters are invalid.
+   */
+  function dm_chatbot(){
+    $language =  \Drupal::languageManager()->getCurrentLanguage()->getId();
+     $textL = ['info'=>['ro'=>'Acest robot poate raspunde la intrebari referiotoare la orele de deschidere a unui magazin de inchiriere a masinilor, metode de plata, salutare, multumiri(just english)',
+    'en'=>'The bot can answer questions about a rental shop, the open hours, the payments methods and car information!'],
+    'credits'=>['en'=>'Tensorflow was used to train the model!',
+    'ro'=>'Pentru antrenarea modelului a fost libraria Tensorflow']];
+    
+    $build = array();
+    $build['#attached']['library'][] = 'dm_simple/chatbot.test';
+
+    $build['content'] = array(
+      '#markup' => '
+      <h5>'.$textL['info'][$language].'</h5>
+      <div id="buttons">
+      </div>
+      <div  id="container"></div>
+      
+      <div id="dialog" style="height:300px;overflow: scroll;" title="Basic dialog"></div>
+      <p>'.$textL['credits'][$language].'</p>
+      <div class="modal"><!-- Place at bottom of page --></div>
+      ',
+    );
+    $result = [];
+    $build['#cache']['max-age'] = 0;
+    $build['#attached']['drupalSettings']['dm_chatbot']['dm_chatbot'] = $result;
+    return $build;
+  }
 }

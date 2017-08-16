@@ -15,6 +15,14 @@ dm_sequence:
   requirements:
     _permission: 'view dm_simple'
 
+dm_chatbot:
+  path: 'dm_chatbot'
+  defaults:
+    _controller: '\Drupal\dm_simple\Controller\DMSController::dm_chatbot'
+    _title: 'Chatbot for renting cars'
+  requirements:
+    _permission: 'view dm_simple'
+
 dm_simple_ajax:
   path: 'dm_simple/ajax'
   defaults:
