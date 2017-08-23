@@ -350,6 +350,46 @@ class DMSController extends ControllerBase {
        }
 
       $_SESSION['dm_simple_nid'] = 0;
+    }else if($_REQUEST['action']=='getFile'){
+      $_SESSION['dm_chatbot_file'] = 1;
+    }else if($_REQUEST['action']=='openfile'){
+      $file = file_load($_REQUEST['file']);
+      $path_i1 = file_create_url($file->getFileUri());
+      $result[] = $path_i1;
+      $f = explode('/sites/', $path_i1);
+      $result[] = 'sites/'.$f[1];
+      $file = file('sites/'.$f[1], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+      $result[] = $file;
+    }else if($_REQUEST['action']=='savefile'){      
+      $file = file_load($_REQUEST['file']);
+      $path_i1 = file_create_url($file->getFileUri());
+      $f = explode('/sites/', $path_i1);
+      $result[] = $path_i1;
+
+      #$result[] = $_REQUEST['fileText']['rental'];
+      //write to file!!
+      $text = '';
+      $myfile = fopen('sites/'.$f[1], "w");
+      foreach ($_REQUEST['fileText'] as $key => $value) {
+        fwrite($myfile, $key."\n");
+        fwrite($myfile, "###beginQ\n");
+        $text .= $key."\n###beginQ\n";
+        foreach ($value['ques'] as $key1 => $value1) {
+          fwrite($myfile, $value1."\n");
+          $text .= $value1."\n";
+        }        
+        $text .= "###endQ\n###beginA\n";
+        fwrite($myfile, "###endQ\n");
+        fwrite($myfile, "###beginA\n");
+        foreach ($value['ques'] as $key1 => $value1) {
+          fwrite($myfile, $value1."\n");
+          $text .= $value1."\n";
+        }
+        fwrite($myfile, "###endA\n");
+        $text .= "###endA\n";
+      }
+      fclose($myfile);
+      $result['text'] = $text;
     }
     return new JsonResponse($result);
   }
@@ -440,6 +480,13 @@ class DMSController extends ControllerBase {
    *   If the parameters are invalid.
    */
   function dm_chatbot(){
+    $current_user = \Drupal::currentUser();//getName
+
+    if (isset($_SESSION['dm_chatbot_file']) && $_SESSION['dm_chatbot_file']==1 &&
+      $current_user->id()!=0){
+      $_SESSION['dm_chatbot_file'] = 0;
+      return \Drupal::formBuilder()->getForm('Drupal\dm_simple\Form\DMSimpleForm');
+    }
     $language =  \Drupal::languageManager()->getCurrentLanguage()->getId();
      $textL = ['info'=>['ro'=>'Acest robot poate raspunde la intrebari referiotoare la orele de deschidere a unui magazin de inchiriere a masinilor, metode de plata, salutare, multumiri(just english)',
     'en'=>'The bot can answer questions about a rental shop, the open hours, the payments methods and car information!'],
@@ -452,16 +499,26 @@ class DMSController extends ControllerBase {
     $build['content'] = array(
       '#markup' => '
       <h5>'.$textL['info'][$language].'</h5>
+      <div id="buttons1"></div>
       <div id="buttons">
       </div>
       <div  id="container"></div>
       
-      <div id="dialog" style="height:300px;overflow: scroll;" title="Basic dialog"></div>
+      <div id="dialog" style="max-height:1000px;overflow: scroll;" title="Basic dialog"></div>
       <p>'.$textL['credits'][$language].'</p>
       <div class="modal"><!-- Place at bottom of page --></div>
       ',
     );
-    $result = [];
+    $result = ['auth'=>$current_user->id()!=0];
+    if (isset( $_SESSION['dm_simple_FID']) && isset($_SESSION['dm_chatbot_file'])
+       && $_SESSION['dm_simple_FID']>0){
+      $result['file'] = $_SESSION['dm_simple_FID'];
+      $file = file_load($result['file']);
+      $path_i1 = file_create_url($file->getFileUri());
+      $result[] = $path_i1;
+      $f = explode('/sites/', $path_i1);
+      $result['filepath'] = 'sites/'.$f[1];
+    }
     $build['#cache']['max-age'] = 0;
     $build['#attached']['drupalSettings']['dm_chatbot']['dm_chatbot'] = $result;
     return $build;

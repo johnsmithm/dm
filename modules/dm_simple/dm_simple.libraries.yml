@@ -56,3 +56,5 @@ chatbot.test:
   dependencies:
     - core/jquery.once
     - core/drupal
+    - core/jquery.ui.dialog
+    - core/jquery.ui.accordion
