@@ -525,7 +525,7 @@ class DMSController extends ControllerBase {
       '#markup' => '
       <h5>'.$textL['info'][$language].'</h5>
       <div id="buttons1"></div>
-      <div id="buttons">
+      <div id="buttonsx">
       </div>
       <div  id="container"></div>
       
