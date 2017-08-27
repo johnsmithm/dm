@@ -461,6 +461,278 @@ def getCells(page,rowDots,collDots, out, debug=False):
     out['cellsCN'] = cellsCN
     return out
 
+def order(d, nr=50, path='save-movie-full.p'):
+    d2 =  pickle.load( open( path, "rb" ) )
+    movies = d2[0]##year, actor, directo, countr, rating, plot, cats
+    p = []
+    w = [2, 1, 3, 1, 1, 0.5, 2]
+    for id in movies:
+        sc = 0
+        for m in d:
+            if str(m[0]) == id:
+                sc = 0
+                break
+            for i, info in enumerate(movies[str(m[0])]):
+                if isinstance(info, list):
+                    for it in info:
+                        if it in movies[str(id)][i]:
+                            sc += w[i]*float(m[1])
+                else:
+                    if info == movies[str(id)][i]:
+                        sc += w[i]*float(m[1])
+        p.append([id,sc])
+    
+    p = sorted(p, key=lambda x: x[1], reverse=True)
+        
+    return p[:nr]
+def make_movie_data(likedMovies, maxCateggoriesMovie=10, maxM=15, path='save-movie-full.p'):
+    movie_ids = []
+    
+    movie_l = []
+    cats = []
+    year = []
+    actor = []
+    director = []
+    country = []
+    rating = []
+    plot = []
+    u_rating = []
+        
+    d2 =  pickle.load( open( path, "rb" ) )
+    movies = d2[0]##year, actor, directo, countr, rating, plot
+    backRatI = {str(i[1][0]):i[0] for i in d2[5].items()}
+    
+    yearBu = {c:int((c//10)-190) for c in range(1900, 2017)}
+    mark = d2[7]
+    #print(mark)
+    
+    #maxCateggoriesMovie , maxCharsTitle, nClases , rr
+    for i in range(1):
+        v = [a[0] for a in likedMovies]
+        r = [a[1] for a in likedMovies]
+        
+        mmax = min(len(v),maxM)
+        cat1 = []
+        year1 = []
+        actor1 = []
+        director1 = []
+        country1 = []
+        rating1 = []
+        u_rating1 = []
+        plot1 = []
+        movie_ids1 = []
+        j = 0
+        while j<len(v) and len(cat1)<= maxM:
+            movieId = v[j]
+            #movieIbmId = df[df['movieId']==movieId]['imdbId'].values[0]
+            if str(movieId) not in movies:
+                j+=1
+                #print(movieId)
+                continue
+            
+            info = movies[str(movieId)]
+            #year, actor, director, country, rating, plot
+            g1 = info[6]+[20]*(maxCateggoriesMovie-len(info[6])) if len(info[6])<maxCateggoriesMovie else info[6]
+            
+            cat1.append(g1)
+            year1.append(yearBu[info[0]])
+            actor1.append(info[1]+[len(d2[2])+1]*(10-len(info[1])) if len(info[1])<10 else info[1])
+            director1.append(info[2]+[len(d2[1])+1]*(2-len(info[2])) if len(info[2])<2 else info[2])
+            country1.append(info[3]+[len(d2[4])+1]*(3-len(info[3])) if len(info[3])<3 else info[3])
+            plot1.append(info[5]+[len(d2[3])+1]*(10-len(info[5])) if len(info[5])<10 else info[5])
+            rating1.append(round(backRatI[str(info[4])]))
+            u_rating1.append(mark[str(r[j])])#change!!!
+            movie_ids1.append(movieId)
+            #movie, directorId,actorsId,wordId,countryId,imdbRatingsId
+            j+=1
+        
+        if len(cat1) < 3:
+            print ('less than 3')
+            continue
+        
+        movie_l.append(len(cat1)-1)
+        movie_ids.append(movie_ids1)    
+        
+        
+        if  len(cat1) < maxM:
+            #print(len(v))
+            year1.extend([201-190+1]*(maxM-len(cat1)))#ok
+            rating1.extend([11]*(maxM-len(cat1)))#ok
+            actor1.extend([[len(d2[2])+1]*10]*(maxM-len(cat1)))
+            director1.extend([[len(d2[1])+1]*2]*(maxM-len(cat1)))
+            country1.extend([[len(d2[4])+1]*3]*(maxM-len(cat1)))
+            plot1.extend([[len(d2[3])+1]*10]*(maxM-len(cat1)))
+            u_rating1.extend([10]*(maxM-len(cat1)))
+            cat1.extend([[20]*maxCateggoriesMovie]*(maxM-len(cat1)))
+        
+        #print('',len(director1))
+        #for c in director1:
+        #    print(len(c))
+        #break
+        cats .append(cat1)
+        year .append(year1)
+        actor .append(actor1)
+        director.append(director1)
+        country.append(country1)
+        rating .append(rating1)
+        plot .append(plot1)
+        u_rating .append(u_rating1)#??
+        
+        
+        
+        #print(movie_ids)
+        
+        #break
+        
+        
+    # ids, len, corect, cats
+    return np.array(cats), np.array(year),np.array(actor),np.array(director),np.array(country),\
+    np.array(rating),np.array(plot),np.array(u_rating),\
+    np.array(movie_l)
+
+def order_dl(d, output_graph, nr=50, path='save-movie-full.p'):
+    li = order(d,nr, path=path)
+    li = [[l[0],1.0] for l in li]
+    liked = make_movie_data(d, path=path)
+    toOrder = make_movie_data(li,maxM=len(li), path=path)
+    toOrder = [np.squeeze(t) for t in toOrder]
+    
+    #for i,ss in enumerate(toOrder[:8]):
+    #    print(i,nn[i],ss.shape)
+    
+    ids_order = []
+    
+    #load graph
+    tf.reset_default_graph()
+    loaded_Graph = load_graph(output_graph)
+    
+    #nrMovies = loaded_Graph.get_tensor_by_name('prefix/numberofmovies:0')
+    batch_size =  loaded_Graph.get_tensor_by_name('prefix/batchsize:0')
+    cats = loaded_Graph.get_tensor_by_name('prefix/cats:0')
+    actors = loaded_Graph.get_tensor_by_name('prefix/actors:0')
+    country = loaded_Graph.get_tensor_by_name('prefix/country:0')
+    directors = loaded_Graph.get_tensor_by_name('prefix/directors:0')
+    plot = loaded_Graph.get_tensor_by_name('prefix/plot:0')
+    year = loaded_Graph.get_tensor_by_name('prefix/year:0')
+    ratings = loaded_Graph.get_tensor_by_name('prefix/ratigns:0')
+    ratingsI = loaded_Graph.get_tensor_by_name('prefix/ratignsi:0')
+    movies_l = loaded_Graph.get_tensor_by_name('prefix/moviessequencelength:0') 
+    #ratings_p = loaded_Graph.get_tensor_by_name('prefix/ratingsCorect:0')  
+    ratingsI_p = loaded_Graph.get_tensor_by_name('prefix/ratingsCorectI:0')  
+    cats_p = loaded_Graph.get_tensor_by_name('prefix/predcitcategories:0')
+    actors_p = loaded_Graph.get_tensor_by_name('prefix/actors_p:0')
+    country_p = loaded_Graph.get_tensor_by_name('prefix/country_p:0')
+    directors_p = loaded_Graph.get_tensor_by_name('prefix/directors_p:0')
+    plot_p = loaded_Graph.get_tensor_by_name('prefix/plot_p:0')
+    year_p = loaded_Graph.get_tensor_by_name('prefix/year_p:0')
+    
+    llSt = loaded_Graph.get_tensor_by_name('prefix/laststate:0')
+    score = loaded_Graph.get_tensor_by_name('prefix/score:0')
+    bs = 1
+    nm = 15
+    feed = {#nrMovies : nm,
+                    batch_size :1,
+                    
+                    cats : liked[0],#np.ones((bs, nm,maxCateggoriesMovie),dtype=np.int32),
+                    actors : liked[2],#np.ones((bs, nm,maxActors),dtype=np.int32),
+                    country : liked[4],#np.ones((bs, nm,maxCountry),dtype=np.int32),
+                    directors  : liked[3],# np.ones((bs,nm, maxDirectors),dtype=np.int32),
+                    plot : liked[6],#np.ones((bs,nm,maxPlot),dtype=np.int32),
+                    year : liked[1],#tt,# np.ones((bs,nm),dtype=np.int32)        ,            
+                    ratings : liked[7],#np.ones((bs,nm),dtype=np.int32),
+                    ratingsI :liked[5],#np.ones((bs,nm),dtype=np.int32),                    
+                    movies_l : liked[8]
+    }#np.ones(bs,dtype=np.int32)*nm,
+    '''
+    (0, 'categ', (15, 10))
+    (1, 'year', (15,))
+    (2, 'acto', (15, 10))
+    (3, 'direc', (15, 2))
+    (4, 'countr', (15, 3))
+    (5, 'ratin', (15,))
+    (6, 'plot', (15, 10))
+    '''
+    feed1 = {
+                    batch_size :len(toOrder[5]),
+                    ratingsI_p : toOrder[5],#np.ones((bs),dtype=np.int32),                    
+                    cats_p : toOrder[0],#np.ones((bs, maxCateggoriesMovie),dtype=np.int32),
+                    actors_p : toOrder[2],#np.ones((bs, maxActors),dtype=np.int32),
+                    country_p : toOrder[4],#np.ones((bs, maxCountry),dtype=np.int32),
+                    directors_p  : toOrder[3],#np.ones((bs, maxDirectors),dtype=np.int32),
+                    plot_p : toOrder[6],#np.ones((bs,maxPlot),dtype=np.int32),
+                    year_p : toOrder[1]
+    }
+    
+    
+    sess =  tf.Session(graph=loaded_Graph)   
+    
+    
+    
+    ls = llSt.eval(session=sess, 
+                    feed_dict = feed)
+    #print(ls.shape)
+    
+    feed1[llSt] = np.tile(ls, (len(toOrder[5]), 1))
+    #print(np.tile(ls, (len(toOrder[5]), 1)).shape)
+    sc = score.eval(session=sess, 
+                    feed_dict = feed1)
+    #print(sc)
+    sess.close()
+    #print(li)
+    sc = [[li[i][0],round(ss[0])] for i,ss in enumerate(sc)]
+    
+    #sort by the prediciton
+    p = sorted(sc, key=lambda x: x[1], reverse=True)
+        
+    return p[:nr]
+
+def showMovies1(ids, path='save-movie-full.p'):
+    '''
+        0('categ', (50, 15, 10))
+        1('year', (50, 15))
+        2('acto', (50, 15, 10))
+        3('direc', (50, 15, 2))
+        4('countr', (50, 15, 3))
+        5('ratin', (50, 15)) - 78
+        6('plot', (50, 15, 10))
+        7('u-ratin', (50, 15)) - 0-10
+        8('len', (50,))
+        9('categ_p', (50, 10))
+        10('year_p', (50,))
+        11('acto_p', (50, 10))
+        12('direc_p', (50, 2))
+        13('countr_p', (50, 3))
+        14('ratin_p', (50,)) - 78
+        15('plot_p', (50, 10))
+        16('u-ratin_p', (50,)) -10
+        17 movies ids'''
+    d2 =  pickle.load( open( path, "rb" ) )
+    #movie, directorId,actorsId,wordId,countryId,imdbRatingsId, cats, marks
+    movies = d2[0]##year, actor, directo, countr, rating, plot, cats, title, url
+    backDir = {str(i[1][0]):i[0] for i in d2[1].items()}
+    backAct = {str(i[1][0]):i[0] for i in d2[2].items()}
+    backPlt = {str(i[1][0]):i[0] for i in d2[3].items()}
+    backCou = {str(i[1][0]):i[0] for i in d2[4].items()}
+    backRatI = {str(i[1][0]):i[0] for i in d2[5].items()}
+    #print(d2[1].items()[:3],len(d2[1]))
+    #backRatI = {str(i[1][0]):i[0] for i in d2[5].items()}
+    id = 0
+    bb = 20
+    backCat = {c:d for (d,c) in d2[6].items()}
+    
+    jss = []
+    for i,c in enumerate(ids):
+        dd = movies[str(c[0])]
+         
+        jss . append({'title':dd[7], 'year': dd[0], 'cats':[backCat[d]   for d in dd[6] if d!=20],
+                     'actors':[backAct[str(d)]   for d in dd[1] if d!=11480],
+                     'director':[backDir[str(d)]   for d in dd[2] if d!=1252],
+                     'country':[backCou[str(d)]   for d in dd[3] if d!=64],
+                     'url':dd[8], 'rating':round(backRatI[str(dd[4])]),
+                     'id':str(c[0])})
+        
+    return jss
+
 def reorderPoints(points,h,md=5):
     l = len(points)
     points = sorted(points)

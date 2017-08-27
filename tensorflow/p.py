@@ -120,6 +120,34 @@ def load_predict(imgs, path='modules/dm_simple/imgs/mblstm-width-free-3.ckpt',
 
 @app.route('/server', methods = ['POST','OPTIONS'])
 def getServerInfo():
+    if str(request.form['action']) == 'movies':
+        path = 'modules/dm_simple/imgs/save-movie-full.p'
+        liked = [[110,4.5], [ 527,4.5], [1580,5.0], [5349,4.0], [2959,5.0], [58559,4.0], [1210,5.0], [589,4.5]]
+        mm = run.showMovies1(liked[:13],path = 'modules/dm_simple/imgs/save-movie-full.p')
+        import pickle
+        d2 =  pickle.load( open( path, "rb" ) )
+        #movie, directorId,actorsId,wordId,countryId,imdbRatingsId, cats, marks
+        movies = d2[0]
+        return jsonify({'ans':mm,'mo':movies,'cat':d2[6]})
+    if str(request.form['action']) == 'movies_s':
+        path = 'modules/dm_simple/imgs/save-movie-full.p'
+        liked =  [[int(h),1.0] for h in request.form['id'].split(',')]
+        mm = run.showMovies1(liked[:13],path = 'modules/dm_simple/imgs/save-movie-full.p')
+        
+        return jsonify({'ans':mm})
+    if str(request.form['action']) == 'movies_q':
+        liked = [ [int(v.split('-')[0]),float(v.split('-')[1])] \
+         for v in request.form['liked'].split(',')]
+        print(liked)
+        #liked = [[110,4.5], [ 527,4.5], [1580,5.0], [5349,4.0], [2959,5.0], [58559,4.0], [1210,5.0], [589,4.5]]
+        
+        l = run.order_dl(liked, 'modules/dm_simple/imgs/save-movies-model.pb', 
+                        nr=50,
+                        path = 'modules/dm_simple/imgs/save-movie-full.p')
+        
+        mm = run.showMovies1(l,path = 'modules/dm_simple/imgs/save-movie-full.p')
+        
+        return jsonify({'ans':mm})
 
     if str(request.form['action']) == 'chatbot':
         out = run.chatbot(request.form['message'], path="modules/dm_simple/imgs")

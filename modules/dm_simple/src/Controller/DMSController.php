@@ -482,7 +482,7 @@ class DMSController extends ControllerBase {
   function dm_chatbot(){
     $current_user = \Drupal::currentUser();//getName
 
-    if (isset($_SESSION['dm_chatbot_file']) && $_SESSION['dm_chatbot_file']==1 &&
+    if (0 && isset($_SESSION['dm_chatbot_file']) && $_SESSION['dm_chatbot_file']==1 &&
       $current_user->id()!=0){
       $_SESSION['dm_chatbot_file'] = 0;
       return \Drupal::formBuilder()->getForm('Drupal\dm_simple\Form\DMSimpleForm');
@@ -495,6 +495,31 @@ class DMSController extends ControllerBase {
     
     $build = array();
     $build['#attached']['library'][] = 'dm_simple/chatbot.test';
+
+    $tr = '
+<div id="kont">
+  
+  <div id="name"></div>
+  <div class="img"></div>
+  <div class="bar">
+  </div>
+  
+
+  
+  
+  <div class="footer">
+  </div>
+  <div id="backgroundofkont">
+   
+  <ul id="messages"> 
+
+  </ul>
+   
+ 
+  </div>
+  
+</div>
+  ';
 
     $build['content'] = array(
       '#markup' => '
@@ -510,7 +535,7 @@ class DMSController extends ControllerBase {
       ',
     );
     $result = ['auth'=>$current_user->id()!=0];
-    if (isset( $_SESSION['dm_simple_FID']) && isset($_SESSION['dm_chatbot_file'])
+    if (0 && isset( $_SESSION['dm_simple_FID']) && isset($_SESSION['dm_chatbot_file'])
        && $_SESSION['dm_simple_FID']>0){
       $result['file'] = $_SESSION['dm_simple_FID'];
       $file = file_load($result['file']);
@@ -521,6 +546,69 @@ class DMSController extends ControllerBase {
     }
     $build['#cache']['max-age'] = 0;
     $build['#attached']['drupalSettings']['dm_chatbot']['dm_chatbot'] = $result;
+    return $build;
+  }
+
+  /**
+   * Constructs a movies page.
+   *
+   * The router _controller callback, maps the path
+   * 'sequence' to this method.
+   *
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   If the parameters are invalid.
+   */
+  function dm_movies(){
+    $current_user = \Drupal::currentUser();//getName
+
+    
+    $language =  \Drupal::languageManager()->getCurrentLanguage()->getId();
+     $textL = ['info'=>['ro'=>'Apreciaza cateva filme apoi vezi recomandarile!',
+    'en'=>'Just rank some movies then go to Recommendations Tab!'],
+    'credits'=>['en'=>'Tensorflow was used to train the model!',
+    'ro'=>'Pentru antrenarea modelului a fost libraria Tensorflow']];
+    
+    $build = array();
+    $build['#attached']['library'][] = 'dm_simple/movies.test';
+
+    $build['content'] = array(
+      '#markup' => '
+      <h5>'.$textL['info'][$language].'</h5>
+      
+      <div id="buttons">
+      </div>
+      
+      <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">Movies</a></li>
+        <li><a id="likedM" href="#tabs-2">Liked</a></li>
+        <li><a id="recodm" href="#tabs-3">Recommendations</a></li>
+      </ul>
+      <div id="tabs-1">
+        <div id="Mheader"></div>
+        <div id="Mbody"></div>
+      </div>
+      <div id="tabs-2">
+        <div id="Mheader"></div>
+        <div id="Mbody"></div>
+       </div>
+      <div id="tabs-3">
+        <div id="Mheader"></div>
+        <div id="Mbody"></div>
+      
+      </div>
+    </div>
+      
+      <div id="dialog" style="max-height:1000px;overflow: scroll;" title="Basic dialog"></div>
+      <p>'.$textL['credits'][$language].'</p>
+      <div class="modal"><!-- Place at bottom of page --></div>
+      ',
+    );
+    $result = ['auth'=>$current_user->id()!=0];
+    
+    $build['#cache']['max-age'] = 0;
+    $build['#attached']['drupalSettings']['dm_movies']['dm_movies'] = $result;
     return $build;
   }
 }

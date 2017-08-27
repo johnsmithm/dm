@@ -68,3 +68,100 @@ body.loading .modal {
 .answersDM{
   color:green;
 }
+
+.movies-row .mmm{
+  float:left;
+}
+
+.movies-row {
+  width: 800px;
+  height: 320px;
+  margin: 10px;
+}
+
+.mmm img{
+  cursor: pointer;
+}
+
+.mmm{
+  padding: 10px;
+  width: 150px;
+  height: 300px;
+}
+
+/*chatbot*/
+
+#messages li{
+  position:relative;
+  
+}
+
+.konta{
+  list-style-type:none;
+  position:absolute;
+  word-wrap: break-word;
+  right : 10px;
+  box-shadow : 0 1px 1px grey;
+  border-radius :20px 0 20px 20px;
+  padding : 10px;
+  max-width : 200px ;
+  margin-left:100px;
+  background :#e6e6e6 ;
+  color:black;
+  font-family:sans-serif;
+  margin-top:5px;
+}
+
+.kontb{
+  margin-right:110px;
+  margin-top:5px;
+ list-style-type:none; 
+  
+  word-wrap: break-word;
+  max-width : 200px;
+  left:-9px;
+  border-radius :0 20px 20px 20px;
+  padding : 10px;
+  background :  #29a329;
+  color:white;
+  font-family:sans-serif;
+  box-shadow : 0 2px 5px grey;
+}
+
+.text textarea{
+  position:absolute;
+  bottom:52px;
+  left:28px;
+  width:200px;
+  height:42px;
+  resize:none;
+}
+
+#sentmessage{
+  position:absolute;
+  bottom:52px;
+  left:243px;
+  resize:none;
+}
+
+#backgroundofkont{
+  position:absolute;
+  width:300px;
+  height:248px;
+  background:rgba(255,255,255,0.2);
+  opacity : 0.9;
+
+  overflow : scroll;
+  overflow-x : hidden;
+}
+
+#buttons{
+  position:relative;
+  margin-left:50px;
+  top:5px;
+  width : 300px;
+  height:350px;
+  
+  border-radius : 5px;
+}
+

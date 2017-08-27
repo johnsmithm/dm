@@ -58,3 +58,22 @@ chatbot.test:
     - core/drupal
     - core/jquery.ui.dialog
     - core/jquery.ui.accordion
+
+# Show how weights work.
+movies.test:
+# Add css file.
+  css:
+    component:
+      css/mystyle.css: {}
+  # Add js file.
+  js:
+    # weight is used as example attribute, but please avoid it and instead use
+    # dependencies for order loading.
+    #js/konva.min.js:{}
+    js/movies.js: {  }
+  dependencies:
+    - core/jquery.once
+    - core/drupal
+    - core/jquery.ui.dialog
+    - core/jquery.ui.tabs
+    - core/jquery.ui.autocomplete

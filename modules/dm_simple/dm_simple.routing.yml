@@ -23,6 +23,14 @@ dm_chatbot:
   requirements:
     _permission: 'view dm_simple'
 
+dm_movies:
+  path: 'dm_movies'
+  defaults:
+    _controller: '\Drupal\dm_simple\Controller\DMSController::dm_movies'
+    _title: 'Recommendation system: movies'
+  requirements:
+    _permission: 'view dm_simple'
+
 dm_simple_ajax:
   path: 'dm_simple/ajax'
   defaults:

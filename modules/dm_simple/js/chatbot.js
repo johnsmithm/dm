@@ -19,9 +19,11 @@
   		    ajaxStop: function() { $("body").removeClass("loading"); }    
   		});
 
-      $('#buttons').append('<div style="width:300px;" id="messages"></div>'); 
-      $('#buttons').append('<textarea name="message"></textarea>'); 
+      $('#buttons').append('<div id="backgroundofkont"><ul  id="messages"></ul></div>'); 
+      $('#buttons').append('<div class="text"><textarea placeholder="Type here..." style="font-size:15px;font-family:verdana" name="message"></textarea></div>'); 
       $('#buttons').append('<input type="button" id="sentmessage" value="Sent">');
+
+
 
       if(argsP['auth']){
         $('#buttons1').append('<input type="button" id="getFile" value="Get dataset">');
@@ -90,7 +92,7 @@
               thehtmlContext += '</div>'
               console.log(contextFile)
               $('#dialog').html('<div id="thefile">'+thehtmlContext+'</div>'+
-                '<textarea class="textareainfop" name="addContext"></textarea>'+
+                '<textarea  class="textareainfop" name="addContext"></textarea>'+
                 '<button id="contextbutton">Exec</button>'+
                 "<p class='infop'>/add [context] : [ques-1] \\n [ques-n]  : [ans-1] \\n [ans-n] </p>"+
                 '<p class="infop">/del [context]</p>'+
@@ -177,13 +179,15 @@
 
       function sentMessage(){
         var text = $('textarea').val()
-        $('#messages').append('<p style="background-color:blue;text-align:right;">Me:'+text+'</p>');
+        if(text.length<=1)
+          return ;
+        $('#messages').append('<li class="konta" >Me:'+text+'</li>');
         $.post(urlS, {'action':'chatbot',
                   'message':text},
                     function(result){
                     console.log(result);
                     
-                    $('#messages').append('<p style="background-color:green">Bot:'+result['ans']+'</p>');
+                    $('#messages').append('<li class="kontb" >Bot:'+result['ans']+'</li>');
           });
         $('textarea').val("");
       }
