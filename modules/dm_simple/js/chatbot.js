@@ -19,9 +19,9 @@
   		    ajaxStop: function() { $("body").removeClass("loading"); }    
   		});
 
-      $('#buttons').append('<div id="backgroundofkont"><ul  id="messages"></ul></div>'); 
-      $('#buttons').append('<div class="text"><textarea placeholder="Type here..." style="font-size:15px;font-family:verdana" name="message"></textarea></div>'); 
-      $('#buttons').append('<input type="button" id="sentmessage" value="Sent">');
+      $('#buttonsx').append('<div id="backgroundofkont"><ul  id="messages"></ul></div>'); 
+      $('#buttonsx').append('<div class="text"><textarea placeholder="Type here..." style="font-size:15px;font-family:verdana" name="message"></textarea></div>'); 
+      $('#buttonsx').append('<input type="button" id="sentmessage" value="Sent">');
 
 
 
