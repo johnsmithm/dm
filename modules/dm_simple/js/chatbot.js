@@ -188,6 +188,7 @@
                     console.log(result);
                     
                     $('#messages').append('<li class="kontb" >Bot:'+result['ans']+'</li>');
+                    $('#backgroundofkont').scrollTop($('#backgroundofkont')[0].scrollHeight);
           });
         $('textarea').val("");
       }
