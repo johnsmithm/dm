@@ -385,7 +385,7 @@ def chatbot(text, path):
 
     sess =  tf.Session(graph=loaded_Graph)   
     q = text# 'what kind of modep do you have?'
-    m = [[vocab[c]] for c in q.lower() if c in vocab]
+    m = [[vocab[c]] for c in q[:30].lower() if c in vocab]
     tePRO, tePRE = sess.run([probs,preds], 
                     feed_dict = {messages:[m], lengths:[len(m)],bs:1})
     sess.close()

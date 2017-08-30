@@ -123,7 +123,7 @@ def getServerInfo():
     if str(request.form['action']) == 'movies':
         path = 'modules/dm_simple/imgs/save-movie-full.p'
         liked = [[110,4.5], [ 527,4.5], [1580,5.0], [5349,4.0], [2959,5.0], [58559,4.0], [1210,5.0], [589,4.5]]
-        mm = run.showMovies1(liked[:13],path = 'modules/dm_simple/imgs/save-movie-full.p')
+        mm = run.showMovies1(liked[:9],path = 'modules/dm_simple/imgs/save-movie-full.p')
         import pickle
         d2 =  pickle.load( open( path, "rb" ) )
         #movie, directorId,actorsId,wordId,countryId,imdbRatingsId, cats, marks
@@ -132,7 +132,7 @@ def getServerInfo():
     if str(request.form['action']) == 'movies_s':
         path = 'modules/dm_simple/imgs/save-movie-full.p'
         liked =  [[int(h),1.0] for h in request.form['id'].split(',')]
-        mm = run.showMovies1(liked[:13],path = 'modules/dm_simple/imgs/save-movie-full.p')
+        mm = run.showMovies1(liked[:9],path = 'modules/dm_simple/imgs/save-movie-full.p')
         
         return jsonify({'ans':mm})
     if str(request.form['action']) == 'movies_q':
@@ -141,11 +141,11 @@ def getServerInfo():
         print(liked)
         #liked = [[110,4.5], [ 527,4.5], [1580,5.0], [5349,4.0], [2959,5.0], [58559,4.0], [1210,5.0], [589,4.5]]
         
-        l = run.order_dl(liked, 'modules/dm_simple/imgs/save-movies-model.pb', 
-                        nr=50,
+        l = run.order_dl(liked[:5], 'modules/dm_simple/imgs/save-movies-model.pb', 
+                        nr=20,
                         path = 'modules/dm_simple/imgs/save-movie-full.p')
         
-        mm = run.showMovies1(l,path = 'modules/dm_simple/imgs/save-movie-full.p')
+        mm = run.showMovies1(l[:6],path = 'modules/dm_simple/imgs/save-movie-full.p')
         
         return jsonify({'ans':mm})
 
