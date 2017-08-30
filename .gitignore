@@ -7,3 +7,5 @@ tensorflow/runT*
 tensorflow/models/*
 tensorflow/pyimagesearch/*
 tensorflow/flask.txt
+modules/dm_simple/imgs/test.png
+tensorflow/run.pyc
