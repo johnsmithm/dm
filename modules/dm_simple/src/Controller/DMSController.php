@@ -390,6 +390,15 @@ class DMSController extends ControllerBase {
       }
       fclose($myfile);
       $result['text'] = $text;
+    }else if($_REQUEST['action']=='addGenetic'){
+      $result = 1;
+      $_SESSION['dm_simple_FID'] = -2;
+    }else if($_REQUEST['action']=='resetGenetic'){
+      $result = 1;
+      $_SESSION['dm_simple_FID'] = -1;
+    }else if($_REQUEST['action']=='tryGenetic'){
+      $result = 1;
+      $_SESSION['dm_simple_FID'] = 192;//-3;
     }
     return new JsonResponse($result);
   }
@@ -609,6 +618,110 @@ class DMSController extends ControllerBase {
     
     $build['#cache']['max-age'] = 0;
     $build['#attached']['drupalSettings']['dm_movies']['dm_movies'] = $result;
+    return $build;
+  }
+
+
+  /**
+   * Constructs a movies page.
+   *
+   * The router _controller callback, maps the path
+   * 'sequence' to this method.
+   *
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   If the parameters are invalid.
+   */
+  function dm_genetic(){
+    $current_user = \Drupal::currentUser();//getName
+    $notAut = 1;# ($current_user->id()==0);
+    //unset($_SESSION['dm_simple_FID']);
+    //$_SESSION['dm_simple_FID'] = 55;
+    if ($notAut && isset($_SESSION['dm_simple_FID']) &&
+      $_SESSION['dm_simple_FID']==-2){
+      return \Drupal::formBuilder()->getForm('Drupal\dm_simple\Form\DMSimpleForm');
+    }
+    
+    $language =  \Drupal::languageManager()->getCurrentLanguage()->getId();
+     $textL = ['info'=>['ro'=>'Adauga clase, obiecte, profesori si constangeri. '.
+     'Apoi ruleaza algoritmul. <span id="infohelp"></span>',
+    'en'=>'Add teachers, lectures and constrains, then run algorithms'.
+    '<span id="infohelp"></span>'],
+    'credits'=>['en'=>'WebWorkers was used to run the model!',
+    'ro'=>'Pentru rularea modelului este folosit WebWorker']];
+    
+    $build = array();
+    $build['#attached']['library'][] = 'dm_simple/genetic.test';
+
+    $build['content'] = array(
+      '#markup' => '
+      <h5>'.$textL['info'][$language].'</h5>
+      
+      <div id="buttons">
+      </div>
+      
+      <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">Info</a></li>
+        <li><a id="likedM" href="#tabs-2">Constrains</a></li>
+        <li><a id="recodm" href="#tabs-3">Recommendations</a></li>
+      </ul>
+      <div id="tabs-1">
+        <div id="Mheader"></div>
+        <div id="Mbody">
+            <div id="tabs-1">
+              <ul>
+                <li><a id="likedM" href="#tabs-21">Obiecte/Lectures</a></li>
+                <li><a id="claaaas" href="#tabs-11">Clase/Groups</a></li>
+                <li><a id="recodm" href="#tabs-31">Profesori/Teachers</a></li>
+              </ul>
+              <div id="tabs-11"></div>
+              <div id="tabs-21"></div>
+              <div id="tabs-31"></div>
+            </div>
+        </div>
+      </div>
+      <div id="tabs-2">
+        <div id="Mheader"></div>
+        <div id="Mbody"></div>
+       </div>
+      <div id="tabs-3">
+        <div id="Mheader"></div>
+        <div id="Mbody"></div>
+      
+      </div>
+    </div>
+      
+      <div id="dialog" style="max-height:1000px;overflow: scroll;" title="Basic dialog"></div>
+      <p>'.$textL['credits'][$language].'</p>
+      <div class="modal"><!-- Place at bottom of page --></div>
+      ',
+    );
+    $result = ['auth'=>$current_user->id()!=0];
+    $result['ok'] = 0;
+    
+    $build['#cache']['max-age'] = 0;
+    if(isset($_SESSION['dm_simple_FID']))
+      $result['nid'] = $_SESSION['dm_simple_FID'];
+
+    if(isset($_SESSION['dm_simple_FID']) && $_SESSION['dm_simple_FID']>0){
+      $file = file_load($_SESSION['dm_simple_FID']);
+      if ($file && $file->getFileUri() && file_exists($file->getFileUri())) {
+        $path_i1 = file_create_url($file->getFileUri());
+        //$result[] = $path_i1;
+        $f = explode('/sites/', $path_i1);
+        $result['filepath'] = 'sites/'.$f[1];
+        //dsm($result['filepath']);
+        $file = file_get_contents($result['filepath'], FILE_USE_INCLUDE_PATH);
+        $sss= json_decode($file);
+        if($sss!==null){
+          $result['json'] = $sss;
+          $result['ok'] = 1;
+        }
+      }
+    }
+
+    $build['#attached']['drupalSettings']['dm_genetic']['dm_genetic'] = $result;
     return $build;
   }
 }

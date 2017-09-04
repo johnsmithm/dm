@@ -31,6 +31,14 @@ dm_movies:
   requirements:
     _permission: 'view dm_simple'
 
+dm_genetic:
+  path: 'dm_genetic'
+  defaults:
+    _controller: '\Drupal\dm_simple\Controller\DMSController::dm_genetic'
+    _title: 'Algoritm Genetic: Creare orar scolar'
+  requirements:
+    _permission: 'view dm_simple'
+
 dm_simple_ajax:
   path: 'dm_simple/ajax'
   defaults:
