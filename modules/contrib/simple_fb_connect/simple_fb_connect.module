@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ *  Hook implementations for Simple FB Connect module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function simple_fb_connect_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'simple_fb_connect.settings_form':
+      $output = '<h3>' . t('Configuration instructions'). '</h3>';
+      $output .= '<p>';
+      $output .= t('Configuration instructions and other useful documentation can be found from <a href="@handbook-url">Simple FB Connect Handbook</a>.', ['@handbook-url' => 'https://www.drupal.org/docs/8/modules/simple-fb-connect']);
+      $output .='</p>';
+      return $output;
+    break;
+  }
+}

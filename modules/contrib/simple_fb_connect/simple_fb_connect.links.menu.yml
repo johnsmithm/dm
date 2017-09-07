@@ -1,0 +1,5 @@
+simple_fb_connect.settings_form:
+  title: Simple FB Connect
+  description: 'Configure your Facebook App parameters and other settings for Facebook login.'
+  parent: user.admin_index
+  route_name: simple_fb_connect.settings_form

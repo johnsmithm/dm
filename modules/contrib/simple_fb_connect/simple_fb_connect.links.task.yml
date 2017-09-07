@@ -1,0 +1,4 @@
+simple_fb_connect.redirect_to_fb:
+  route_name: simple_fb_connect.redirect_to_fb
+  base_route: user.page
+  title: 'Facebook login'

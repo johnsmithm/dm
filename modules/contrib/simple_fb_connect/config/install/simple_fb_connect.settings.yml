@@ -1,0 +1,7 @@
+app_id: ""
+app_secret: ""
+api_version: "v2.10"
+post_login_path: user
+redirect_user_form: 0
+disable_admin_login: 1
+disabled_roles: []

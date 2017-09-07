@@ -1,0 +1,42 @@
+services:
+  simple_fb_connect.fb_manager:
+    class: Drupal\simple_fb_connect\SimpleFbConnectFbManager
+    arguments:
+      - '@logger.factory'
+      - '@event_dispatcher'
+      - '@entity_field.manager'
+      - '@url_generator.non_bubbling'
+      - '@simple_fb_connect.persistent_data_handler'
+
+  simple_fb_connect.user_manager:
+    class: Drupal\simple_fb_connect\SimpleFbConnectUserManager
+    arguments:
+      - '@config.factory'
+      - '@logger.factory'
+      - '@string_translation'
+      - '@event_dispatcher'
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+      - '@token'
+      - '@transliteration'
+      - '@language_manager'
+
+  simple_fb_connect.post_login_manager:
+    class: Drupal\simple_fb_connect\SimpleFbConnectPostLoginManager
+    arguments:
+      - '@config.factory'
+      - '@router.request_context'
+      - '@path.validator'
+      - '@simple_fb_connect.persistent_data_handler'
+
+  simple_fb_connect.persistent_data_handler:
+    class: Drupal\simple_fb_connect\SimpleFbConnectPersistentDataHandler
+    arguments:
+      - '@session'
+
+  simple_fb_connect.fb_factory:
+    class: Drupal\simple_fb_connect\SimpleFbConnectFbFactory
+    arguments:
+      - '@config.factory'
+      - '@logger.factory'
+      - '@simple_fb_connect.persistent_data_handler'

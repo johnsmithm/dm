@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Simple FB Connect module.
+ */
+
+use Drupal\Core\Cache\Cache;
+
+/**
+ * Implements hook_install().
+ *
+ * Invalidate render cache when module is installed so that the "Facebook Login"
+ * local task tab appears at /user/login.
+ */
+function simple_fb_connect_install() {
+  Cache::invalidateTags(['rendered']);
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * Checks that a compatible version of Facebook Graph SDK has been installed
+ * with Composer. Check installation instructions from the README.txt.
+ */
+function simple_fb_connect_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'install') {
+    $sdk_found = FALSE;
+
+    if ($json = simple_fb_connect_read_packages()) {
+
+      // Loop through installed packages and check that the SDK version is OK.
+      foreach ($json as $package) {
+        if ($package['name'] == 'facebook/graph-sdk') {
+          $sdk_found = TRUE;
+          if ($package['version'] < 5 || $package['version'] >= 6) {
+            $requirements['simple_fb_connect'] = [
+              'description' => t('Simple FB Connect could not be installed because an incompatible version of Facebook SDK library was detected. Please read the installation instructions from README.txt.'),
+              'severity' => REQUIREMENT_ERROR,
+            ];
+          }
+        }
+      }
+
+      // SDK was not found in installed.json.
+      if (!$sdk_found) {
+        $requirements['simple_fb_connect'] = [
+          'description' => t('Simple FB Connect could not be installed because Facebook SDK library was not found. Simple FB Connect must be installed using Composer. Please read the installation instructions from README.txt.'),
+          'severity' => REQUIREMENT_ERROR,
+        ];
+      }
+    }
+
+    // installed.json could not be read or parsed.
+    else {
+      $requirements['simple_fb_connect'] = [
+        'description' => t('Simple FB Connect could not be installed: installed.json could not be read.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+
+  return $requirements;
+
+}
+
+/**
+ * Reads and parses Drupal installed.json.
+ *
+ * @return array|bool
+ *   Parsed installed.json if the file could be read and parsed.
+ *   False otherwise.
+ *
+ * @see https://www.drupal.org/node/2873333
+ */
+function simple_fb_connect_read_packages() {
+  // Drupal can be installed with Composer or traditionally from a tarball.
+  // - If installed from a tarball or with Composer using drupal/drupal,
+  //   DRUPAL_ROOT is the acutal website filesystem root.
+  // - If installed with Composer using drupal-composer/drupal-project,
+  //   DRUPAL_ROOT is a 'web' sub directory of the Composer project directory.
+  $base_dir = is_dir(DRUPAL_ROOT . '/vendor') ? DRUPAL_ROOT : dirname(DRUPAL_ROOT);
+  $file_path = $base_dir . '/vendor/composer/installed.json';
+  if (file_exists($file_path)) {
+    if ($filedata = @file_get_contents($file_path)) {
+      $json = @json_decode($filedata, TRUE);
+      if ($json !== NULL) {
+        return $json;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Set Graph API version to v2.6.
+ *
+ * The Graph API version became a configurable parameter in 8.x-3.0-rc3.
+ * Versions prior to 8.x-3.0-rc3 used hard coded Graph API version 'v2.6'.
+ * This update populates the value 'v2.6' to module settings so
+ * that older installations will continue to use the same Graph API version than
+ * before.
+ */
+function simple_fb_connect_update_8301(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('simple_fb_connect.settings');
+  $config->set('api_version', 'v2.6');
+  $config->save(TRUE);
+}
+
+/**
+ * Enables Simple FB Connect - Rules Integration if needed.
+ *
+ * Rules support was moved to a separate sub module in release 8.x-3.1.
+ * This update automatically enables the sub module if the site has Rules events
+ * that react to Simple FB Connect events.
+ */
+function simple_fb_connect_update_8302(&$sandbox) {
+  // Check if Rules is enabled.
+  if (\Drupal::service('module_handler')->moduleExists('rules')) {
+
+    // Check if we have Rules reacting to Simple FB Connect events.
+    $simple_fb_connect_rules = ['simple_fb_connect.user_login', 'simple_fb_connect.user_create'];
+    $simple_fb_connect_rules_exists = FALSE;
+    $rules = \Drupal::service('entity.manager')->getStorage('rules_reaction_rule')->loadMultiple();
+    foreach ($rules as $rule) {
+      if (array_intersect($simple_fb_connect_rules, $rule->getEventNames())) {
+        $simple_fb_connect_rules_exists = TRUE;
+        break;
+      }
+    }
+
+    // Enable simple_fb_connect_rules if rules were found.
+    if ($simple_fb_connect_rules_exists) {
+      \Drupal::service('module_installer')->install(['simple_fb_connect_rules']);
+    }
+  }
+}

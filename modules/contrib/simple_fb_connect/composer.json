@@ -1,0 +1,13 @@
+{
+  "name": "drupal/simple_fb_connect",
+  "description": "Allows users to authenticate with their Facebook accounts.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/simple_fb_connect",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/simple_fb_connect"
+  },
+  "license": "GPL-2.0+",
+  "require" : {
+    "facebook/graph-sdk" : "~5.0"
+  }
+}

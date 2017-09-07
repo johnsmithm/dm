@@ -1,0 +1,14 @@
+name: Simple FB Connect - Rules Integration
+type: module
+description: 'Integrates Simple FB Connect with Rules.'
+package: Authentication
+# core: 8.x
+dependencies:
+  - simple_fb_connect
+  - rules
+
+# Information added by Drupal.org packaging script on 2017-08-05
+version: '8.x-3.1'
+core: '8.x'
+project: 'simple_fb_connect'
+datestamp: 1501958347
