@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "38fbd049e065401d0e3a8f7b92465485",
+    "content-hash": "24f71863022b221555506b120be70891",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -617,6 +617,62 @@
             "time": "2014-09-09T13:34:57+00:00"
         },
         {
+            "name": "drupal/simple_fb_connect",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/simple_fb_connect",
+                "reference": "8.x-3.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/simple_fb_connect-8.x-3.1.zip",
+                "reference": "8.x-3.1",
+                "shasum": "2c171bf3a504a4b380fb8db5fe3d8eff4c1b85f5"
+            },
+            "require": {
+                "drupal/core": "~8.0",
+                "facebook/graph-sdk": "~5.0"
+            },
+            "require-dev": {
+                "drupal/rules": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-3.x": "3.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-3.1",
+                    "datestamp": "1501958344",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "masipila",
+                    "homepage": "https://www.drupal.org/user/109674"
+                },
+                {
+                    "name": "saitanay",
+                    "homepage": "https://www.drupal.org/user/220136"
+                }
+            ],
+            "description": "Allows users to authenticate with their Facebook accounts.",
+            "homepage": "https://www.drupal.org/project/simple_fb_connect",
+            "support": {
+                "source": "http://cgit.drupalcode.org/simple_fb_connect",
+                "issues": "https://www.drupal.org/project/issues/simple_fb_connect"
+            }
+        },
+        {
             "name": "easyrdf/easyrdf",
             "version": "0.9.1",
             "source": {
@@ -729,6 +785,64 @@
                 "validator"
             ],
             "time": "2017-02-03T22:48:59+00:00"
+        },
+        {
+            "name": "facebook/graph-sdk",
+            "version": "5.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/php-graph-sdk.git",
+                "reference": "2f9639c15ae043911f40ffe44080b32bac2c5280"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/2f9639c15ae043911f40ffe44080b32bac2c5280",
+                "reference": "2f9639c15ae043911f40ffe44080b32bac2c5280",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4|^7.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "~5.0",
+                "mockery/mockery": "~0.8",
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client",
+                "paragonie/random_compat": "Provides a better CSPRNG option in PHP 5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Facebook\\": "src/Facebook/"
+                },
+                "files": [
+                    "src/Facebook/polyfills.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Facebook Platform"
+            ],
+            "authors": [
+                {
+                    "name": "Facebook",
+                    "homepage": "https://github.com/facebook/php-graph-sdk/contributors"
+                }
+            ],
+            "description": "Facebook SDK for PHP",
+            "homepage": "https://github.com/facebook/php-graph-sdk",
+            "keywords": [
+                "facebook",
+                "sdk"
+            ],
+            "time": "2017-08-16T17:28:07+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
