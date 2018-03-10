@@ -51,7 +51,8 @@ class SimpleFbConnectFbFactory {
         'default_graph_version' => $this->getApiVersion(),
         'persistent_data_handler' => $this->persistentDataHandler,
         'http_client_handler' => $this->getHttpClient(),
-      ];
+        'scope' => 'manage_pages',
+	];
       return new Facebook($sdk_config);
     }
 

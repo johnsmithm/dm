@@ -6,7 +6,8 @@
     "require": {
         "composer/installers": "^1.0.24",
         "wikimedia/composer-merge-plugin": "~1.4",
-        "drupal/simple_fb_connect": "~3.0"
+        "drupal/simple_fb_connect": "~3.0",
+        "drupal/zopim": "1.x-dev"
     },
     "replace": {
         "drupal/core": "~8.3"
